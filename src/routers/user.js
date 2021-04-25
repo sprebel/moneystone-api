@@ -10,7 +10,7 @@ router.post("/user", async(req,res) => {
         const createUser = await user.save();
         res.status(200).send(createUser);
     } catch (e) {
-        res.status(400).send(e);
+        res.status(500).json({message: "Error, Mobile number already registed"});
     }
 });
 
@@ -20,7 +20,7 @@ router.get("/user", async(req,res) => {
         const userData = await User.find();
         res.send(userData);
     } catch (e) {
-        res.status(400).send(e);
+        res.status(500).send(e);
     }
 })
 
@@ -35,7 +35,7 @@ router.get("/user/:id", async(req,res) => {
             res.send(userDetails);
         }
     } catch (e) {
-        res.status(400).send(e);
+        res.status(500).send(e);
     }
 })
 
@@ -46,7 +46,7 @@ router.patch("/user/:id", async(req,res) => {
         const updateUser = await User.findByIdAndUpdate(_id, req.body, {new:true});
         res.send(updateUser);
     } catch (e) {
-        res.status(400).send(e);
+        res.status(500).send(e);
     }
 })
 
@@ -60,7 +60,7 @@ router.delete("/user/:id", async(req,res) => {
         }
         res.send(deleteUser);
     } catch (e) {
-        res.status(400).send(e);
+        res.status(500).send(e);
     }
 })
 
