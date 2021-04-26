@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
     },
     name : {
         type : String,
-        required : true,
     },
     device_earnings : {
         amt : {type : String}
