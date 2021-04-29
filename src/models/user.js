@@ -13,13 +13,13 @@ const userSchema = new mongoose.Schema({
         type : String,
     },
     device_earnings : {
-        amt : {type : String}
+        type : String
     },  
     team_earnings : {
-        amt : {type : String}
+        type : String
     },
     wallet : {
-        amt : {type : String}
+        type : String
     },
 
 })
