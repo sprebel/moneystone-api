@@ -1,77 +1,94 @@
 const express = require("express");
 const router = new express.Router();
-const mongoose = require("mongoose");
 const multer = require('multer');
-
+// const GridFsStorage = require('multer-gridfs-storage');
+// const crypto = require('crypto');
+// const path = require('path');
+// const mongoose = require('mongoose');
 const Product = require("../models/product");
 
-//get all Products
+//-------------------------- get all Products -----------------//
 router.get("/product", async(req,res) => {
-    try {
-        const productData = await Product.find();
-        res.send(productData);
-    } catch (e) {
-        res.status(500).send(e);
-    }
+  try {
+      const productData = await Product.find();
+      res.send(productData);
+  } catch (e) {
+      res.status(500).send(e);
+  }
 });
 
+// const mongoURI = "mongodb+srv://abhi_lapsi:Anikesh@16@cluster0.q06xr.mongodb.net/moneystone-db?retryWrites=true&w=majority";
+
+// // connection
+// const conn = mongoose.createConnection(mongoURI, {
+//   useNewUrlParser:true,
+//   useCreateIndex:true,
+//   useFindAndModify:false,
+//   useUnifiedTopology:true,
+// });
+
+// init gfs
+// let gfs;
+// conn.once('open', () => {
+//   // init stream
+//   gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+//     bucketName: 'uploads',
+//   });
+// });
+
+// Storage
+// const storage = new GridFsStorage({
+//   url: "mongodb+srv://abhi_lapsi:Anikesh@16@cluster0.q06xr.mongodb.net/moneystone-db?retryWrites=true&w=majority",
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         const filename = buf.toString('hex') + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: 'uploads',
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   },
+// });
+
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, './uploads/');
   },
   filename: function(req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
+    cb(null, file.fieldname + '-' + Date.now() + '.png');
   }
 });
 
-const fileFilter = (req, file, cb) => {
-  // reject a file
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5
-  },
-  fileFilter: fileFilter,
-})
+const upload = multer({ storage: storage });
 
 
-router.post("/", upload.single('image'), (req, res, next) => {
+//------------------------ Upload Products ---------------------//
+router.post("/product", upload.single('image'), async(req,res) => {
+  try {
     const product = new Product({
-      _id: new mongoose.Types.ObjectId(),
-      product_name: req.body.name,
+      productName: req.body.productName,
       price: req.body.price,
-      image: req.file.path 
+      image: req.file.path
     });
-    product
-      .save()
-      .then(result => {
-        console.log(result);
-        res.status(200).json({
-          message: "Created product successfully",
-          createdProduct: {
-              product_name: result.name,
-              price: result.price,
-              _id: result._id,
-              request: {
-                  type: 'GET',
-                  url: "http://localhost:4000/products/" + result._id
-              }
-          }
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
-  });
+
+    const uploadProduct = await product.save();
+
+    res.status(200).json({
+      message: "Product Add Successfully.",
+      image : "http://localhost:4000/products/" + uploadProduct._id + ".png",
+      createdProduct : uploadProduct,
+    });
+
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 
 module.exports = router;

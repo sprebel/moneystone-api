@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 const productSchema = new mongoose.Schema({
-    product_name : { type : String, required: true },
+    productName : { type : String, require : true },
     image : { type : String },
     price : { type : String },
     details : { type : String },
-    feature_one : { type : String },
-    feature_two : { type : String },
+    featureOne : { type : String },
+    featureTwo : { type : String },
     status : { type : String },
     height : { type : String },
     length : { type : String },
