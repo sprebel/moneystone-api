@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
+const mongoURI = "mongodb+srv://abhi_lapsi:Anikesh@16@cluster0.q06xr.mongodb.net/moneystone-db?retryWrites=true&w=majority";
+
 mongoose.connect(
     //"mongodb://127.0.0.1:27017/moneystone", 
-    "mongodb+srv://abhi_lapsi:Anikesh@16@cluster0.q06xr.mongodb.net/moneystone-db?retryWrites=true&w=majority",
+    mongoURI,
     {
         useNewUrlParser:true,
         useCreateIndex:true,
@@ -13,3 +15,5 @@ mongoose.connect(
 }).catch((e) => {
     console.log("No connection..!");
 })
+
+module.exports = mongoURI;
