@@ -23,7 +23,7 @@ router.get("/product", async(req,res) => {
 router.get("/product/:id", async(req,res) => {
   try {
       const _id = req.params.id;
-      const productDetails = await User.findById(_id);
+      const productDetails = await Product.findById(_id);
       if (!productDetails) {
           return res.status(404).send();
       } else {
@@ -100,13 +100,24 @@ router.post("/product", upload.single('image'), async(req,res) => {
       width: req.body.width
     });
 
-    const uploadProduct = await product.save();
+    const addProduct = new Product({
+      productName: req.body.productName,
+      price: req.body.price,
+      image: domain + "/product/img/download/" + filename,
+      details: req.body.details,
+      featureOne: req.body.featureOne,
+      featureTwo: req.body.featureTwo,
+      status: req.body.status,
+      minimum: req.body.minimum,
+      height: req.body.height,
+      length: req.body.length,
+      width: req.body.width
+    });
 
-    console.log(filename);
-
+    console.log(addProduct);
+    const uploadProduct = await addProduct.save();
     res.status(200).json({
       message: "Product Add Successfully.",
-      image : domain + "/product/img/download/" + filename,
       createdProduct : uploadProduct,
     });
 

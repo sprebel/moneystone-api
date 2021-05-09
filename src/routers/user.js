@@ -42,8 +42,8 @@ router.get("/user/:id", async(req,res) => {
 //update user
 router.patch("/user/:id", async(req,res) => {
     try {
-        const _id = req.params.id;
-        const updateUser = await User.findByIdAndUpdate(_id, req.body, {new:true});
+            const _id = req.params.id;
+            const updateUser = await User.findByIdAndUpdate(_id, req.body, {new:true});
         res.send(updateUser);
     } catch (e) {
         res.status(500).send(e);
