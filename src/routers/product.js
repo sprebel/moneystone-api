@@ -79,6 +79,7 @@ router.post("/product", upload.single('image'), async(req,res) => {
       featureOne: req.body.featureOne,
       featureTwo: req.body.featureTwo,
       status: req.body.status,
+      minimum: req.body.minimum,
       height: req.body.height,
       length: req.body.length,
       width: req.body.width

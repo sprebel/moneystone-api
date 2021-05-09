@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
     featureOne : { type : String },
     featureTwo : { type : String },
     status : { type : String },
+    minimum : { type : String },
     height : { type : String },
     length : { type : String },
     width : { type : String },
