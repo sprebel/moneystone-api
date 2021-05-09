@@ -7,6 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Product = require("../models/product");
 const mongoURI = require("../db/conn");
+const domain = require("../config/domain")
 
 //-------------------------- get all Products -----------------//
 router.get("/product", async(req,res) => {
@@ -18,6 +19,7 @@ router.get("/product", async(req,res) => {
   }
 });
 
+var filename;
 
 // Storage
 const storage = new GridFsStorage({
@@ -28,7 +30,7 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
-        const filename = buf.toString('hex') + path.extname(file.originalname);
+        filename = buf.toString('hex') + path.extname(file.originalname);
         const fileInfo = {
           filename: filename,
           bucketName: 'uploads',
@@ -72,14 +74,23 @@ router.post("/product", upload.single('image'), async(req,res) => {
     const product = new Product({
       productName: req.body.productName,
       price: req.body.price,
-      image: req.file.path
+      image: req.file.path,
+      details: req.body.details,
+      featureOne: req.body.featureOne,
+      featureTwo: req.body.featureTwo,
+      status: req.body.status,
+      height: req.body.height,
+      length: req.body.length,
+      width: req.body.width
     });
 
     const uploadProduct = await product.save();
 
+    console.log(filename);
+
     res.status(200).json({
       message: "Product Add Successfully.",
-      image : "http://localhost:4000/products/" + uploadProduct._id + ".png",
+      image : domain + "/product/img/download/" + filename,
       createdProduct : uploadProduct,
     });
 
@@ -172,5 +183,21 @@ router.route('/product/img/download/:filename')
                 }
             });
         });
+
+
+router.route('/product/img/:id')
+  .delete((req, res, next) => {
+      console.log(req.params.id);
+      gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
+          if (err) {
+              return res.status(404).json({ err: err });
+          }
+
+          res.status(200).json({
+              success: true,
+              message: `File with ID ${req.params.id} is deleted`,
+          });
+      });
+});
 
 module.exports = router;
