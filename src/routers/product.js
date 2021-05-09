@@ -19,6 +19,21 @@ router.get("/product", async(req,res) => {
   }
 });
 
+//get product details
+router.get("/product/:id", async(req,res) => {
+  try {
+      const _id = req.params.id;
+      const productDetails = await User.findById(_id);
+      if (!productDetails) {
+          return res.status(404).send();
+      } else {
+          res.send(productDetails);
+      }
+  } catch (e) {
+      res.status(500).send(e);
+  }
+})
+
 var filename;
 
 // Storage
@@ -212,6 +227,17 @@ router.delete("/product/:id", async(req,res) => {
       res.send(deleteProduct);
   } catch (e) {
       res.status(500).send(e);
+  }
+})
+
+//------------------- Update products -------------------//
+router.patch("/product/:id", async(req,res) => {
+  try {
+    const _id = req.params.id;
+    const updateProduct = await Product.findByIdAndUpdate(_id, req.body, {new:true});
+    res.send(updateProduct);
+  } catch (e) {
+    res.status(500).send(e);  
   }
 })
 
