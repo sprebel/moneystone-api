@@ -8,6 +8,7 @@ const orderSchema = new mongoose.Schema({
     userName: {type: mongoose.Schema.Types, ref: userSchema},
     userPhone: {type: mongoose.Schema.Types, ref: userSchema},
     orderDateTime: { type: String },
+    orderExpireDateTime: { type: String },
     orderDetails: {type: mongoose.Schema.Types, ref: productSchema}
 })
 

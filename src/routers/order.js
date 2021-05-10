@@ -23,14 +23,19 @@ router.post("/order", async(req,res) => {
 
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
 
+            const orderDate = req.body.orderDay + '-' +  req.body.orderMonth + '-' + req.body.orderYear;
+            const expiryDate = req.body.orderYear + 1;
+            const orderTimeHour = req.body.orderTimeHour;
+            const orderTimeMinitues = req.body.orderTimeMinitues;
+
             const order = new Order({
                 userId: userDetails._id,
                 userName: userDetails.name,
                 userPhone: userDetails.phone,
-                orderDateTime: req.body.orderDateTime,
-                orderDetails: productDetails
+                orderDetails: productDetails,
+                orderDateTime: orderDate + ' ' + orderTimeHour + ':' + orderTimeMinitues,
+                orderExpireDateTime: req.body.orderDay + '-' +  req.body.orderMonth + '-' + expiryDate + ' '  + orderTimeHour + ':' + orderTimeMinitues,
             });
-            
             const createOrder = await order.save();
             res.status(200).send(createOrder);
         }

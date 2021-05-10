@@ -89,6 +89,7 @@ router.post("/product", upload.single('image'), async(req,res) => {
     const product = new Product({
       productName: req.body.productName,
       price: req.body.price,
+      hourlyPrice: req.body.hourlyPrice,
       image: req.file.path,
       details: req.body.details,
       featureOne: req.body.featureOne,
@@ -103,6 +104,7 @@ router.post("/product", upload.single('image'), async(req,res) => {
     const addProduct = new Product({
       productName: req.body.productName,
       price: req.body.price,
+      hourlyPrice: req.body.hourlyPrice,
       image: domain + "/product/img/download/" + filename,
       details: req.body.details,
       featureOne: req.body.featureOne,
