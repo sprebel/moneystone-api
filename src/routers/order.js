@@ -63,10 +63,15 @@ router.get("/order/:id", async(req,res) => {
         if (!userOrder) {
             return res.status(400).send();
         } else {
-            res.send(userOrder);
+            const houlyRate = userOrder.houlyRate;
+            
+            res.status(200).json({
+                claimReward: houlyRate, 
+                orderDetails: userOrder
+            });
         }
     } catch (e) {
-        res.status(500).send(e);
+        res.status(500).json({message: "Internal Server Error"});
     }
 })
 
