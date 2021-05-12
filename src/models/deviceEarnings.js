@@ -4,7 +4,7 @@ const orderSchema = require("./product");
 
 const deviceEarningsSchema = new mongoose.Schema({
     orderDetails: {type: mongoose.Schema.Types, ref: orderSchema},
-    lastClaim: {type: Number},
+    totalClaimAmt: {type: Number},
     RemainingClaim: {type: Number},
 });
 

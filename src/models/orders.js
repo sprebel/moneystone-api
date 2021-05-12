@@ -9,7 +9,10 @@ const orderSchema = new mongoose.Schema({
     userPhone: {type: mongoose.Schema.Types, ref: userSchema},
     orderDateTime: { type: String },
     orderExpireDateTime: { type: String },
-    orderDetails: {type: mongoose.Schema.Types, ref: productSchema}
+    orderDetails: {type: mongoose.Schema.Types, ref: productSchema},
+    lastClaimTime: {type: Number},
+    lastClaimDate: {type: Number},
+    totalClaimAmt: {type: Number},
 })
 
 const Order = new mongoose.model('Order', orderSchema);

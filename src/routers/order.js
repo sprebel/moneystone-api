@@ -50,6 +50,9 @@ router.post("/order", async(req,res) => {
                 orderDetails: productDetails,
                 orderDateTime: orderDate + ' ' + orderTimeHour + ':' + orderTimeMinitues,
                 orderExpireDateTime: req.body.orderDay + '-' +  req.body.orderMonth + '-' + expiryDate + ' '  + orderTimeHour + ':' + orderTimeMinitues,
+                lastClaimTime: req.body.orderTimeHour,
+                lastClaimDate: req.body.orderDay,
+                totalClaimAmt: 0,
             });
             const createOrder = await order.save();
             res.status(200).send(createOrder);
@@ -120,6 +123,36 @@ router.post("/userOrders", async(req,res) => {
                 res.status(400).json({error: "No Purchase order..!"});
             } else {
                 res.send(userOrder);
+            }   
+        }
+        
+    } catch (e) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+})
+
+//User orders total all products Redeems
+router.post("/userTotalDeviceRedeem", async(req,res) => {
+    try {
+        var _userId = req.body.userId
+        const userDetails = await User.findById(_userId);
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else {
+            const userOrder = await Order.find({'userId' : userDetails._id});
+            if (!userOrder) {
+                res.status(400).json({error: "No Purchase order..!"});
+            } else {
+                var totalClaimAmt = 0;
+                for (let i = 0; i < userOrder.length; i++) {
+                    const claimAmt = userOrder[i].totalClaimAmt;
+                    totalClaimAmt += parseInt(claimAmt);
+                    console.log(totalClaimAmt);
+                }
+                res.status(200).json({
+                    "message": "Device Total Redeems",
+                    "total": totalClaimAmt,
+                });
             }   
         }
         
