@@ -6,7 +6,6 @@ const User = require("../models/user")
 
 //create new order
 router.post("/order", async(req,res) => {
-    console.log(req.body);
     try {
         var _productId = req.body.productId
         var _userId = req.body.userId
@@ -14,11 +13,27 @@ router.post("/order", async(req,res) => {
         const userDetails = await User.findById(_userId);
         if (!productDetails) {
             return res.status(400).json({message: "Product not available..!"});
-        } else if (!userDetails) {
+        } else 
+        if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else if (userDetails.wallet < productDetails.price) {
             return res.status(400).json({message: "You have insufficient wallet balance"});
         } else {
+            // const newProductId = productDetails._id;
+            // const newProductLimit = productDetails.minimum;
+
+            // const userOrder = await Order.find({'userId' : userDetails._id});
+            // res.send(userOrder);
+
+            // for (let i = 0; i < userOrder.length; i++) {
+            //     const allProductsId = userOrder[i]['orderDetails']['_id'];
+            //     if (newProductId == allProductsId) {
+            //         console.log('IN Yes');
+            //     }
+            //     console.log('Yes');
+            // }
+
+
             var minusWalletAmt = userDetails.wallet - productDetails.price;
 
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
@@ -40,7 +55,7 @@ router.post("/order", async(req,res) => {
             res.status(200).send(createOrder);
         }
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+            
     }
 });
 

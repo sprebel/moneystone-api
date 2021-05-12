@@ -6,6 +6,7 @@ const authRouter = require("./routers/auth");
 const profileRouter = require("./routers/profile");
 const productRouter = require("./routers/product");
 const orderRouter = require("./routers/order");
+const deviceEarningsRouter = require("./routers/deviceEarnings");
 
 const app = express();
 const port = process.env.PORT || 4000
@@ -17,5 +18,6 @@ app.use(authRouter);
 app.use(profileRouter);
 app.use(productRouter);
 app.use(orderRouter);
+app.use(deviceEarningsRouter);
 
 app.listen(port, () => console.log(`connection is setup at ${port}`));
