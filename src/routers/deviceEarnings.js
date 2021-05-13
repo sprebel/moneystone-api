@@ -51,9 +51,13 @@ router.post("/deviceEarnigs", async(req,res) => {
 //Device redeem
 router.post("/deviceRedeem", async(req,res) => {
     try {
+        var _userId = req.body.userId
         var _orderId = req.body.orderId;
         const orderDetails = await Order.findById(_orderId);
-        if (!orderDetails) {
+        const userDetails = await User.findById(_userId);
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else if (!orderDetails) {
             return res.status(400).json({message: "Product not found..!"});
         } else {
             
@@ -78,6 +82,10 @@ router.post("/deviceRedeem", async(req,res) => {
 
             var totalClaimAmt = orderDetails.totalClaimAmt + remainingClaim;
 
+            var addWalletAmt = userDetails.wallet + remainingClaim;
+            var addDeviceAmt = userDetails.device_earnings + remainingClaim;
+
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt}, {new:true});
 
             const updateOrder = await Order.findByIdAndUpdate(_orderId, 
                 {
