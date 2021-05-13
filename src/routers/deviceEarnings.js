@@ -85,7 +85,7 @@ router.post("/deviceRedeem", async(req,res) => {
             var addWalletAmt = userDetails.wallet + remainingClaim;
             var addDeviceAmt = userDetails.device_earnings + remainingClaim;
 
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt}, {new:true});
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt, "device_earnings" : addDeviceAmt}, {new:true});
 
             const updateOrder = await Order.findByIdAndUpdate(_orderId, 
                 {
