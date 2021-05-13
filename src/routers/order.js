@@ -36,6 +36,9 @@ router.post("/order", async(req,res) => {
 
             var minusWalletAmt = userDetails.wallet - productDetails.price;
 
+            
+            
+            
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
 
             const orderDate = req.body.orderDay + '-' +  req.body.orderMonth + '-' + req.body.orderYear;
@@ -58,7 +61,7 @@ router.post("/order", async(req,res) => {
             res.status(200).send(createOrder);
         }
     } catch (e) {
-            
+        res.status(500).json({message: "Internal Server Error"});
     }
 });
 
