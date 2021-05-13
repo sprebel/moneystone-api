@@ -5,7 +5,8 @@ const userSchema = require("./user");
 
 const rechargeSchema = new mongoose.Schema({
     amount : { type : mongoose.Schema.Types.Number },
-    userDetails: {type: mongoose.Schema.Types, ref: userSchema},
+    transactionDate : { type : String },
+    userDetails: {type: mongoose.Schema.Types, ref: userSchema}
 })
 
 const Recharge = new mongoose.model('Recharge', rechargeSchema);

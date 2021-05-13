@@ -35,9 +35,6 @@ router.post("/order", async(req,res) => {
 
 
             var minusWalletAmt = userDetails.wallet - productDetails.price;
-
-            
-            
             
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
 
