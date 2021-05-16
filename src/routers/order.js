@@ -13,8 +13,7 @@ router.post("/order", async(req,res) => {
         const userDetails = await User.findById(_userId);
         if (!productDetails) {
             return res.status(400).json({message: "Product not available..!"});
-        } else 
-        if (!userDetails) {
+        } else if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else if (userDetails.wallet < productDetails.price) {
             return res.status(400).json({message: "You have insufficient wallet balance"});

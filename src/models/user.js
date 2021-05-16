@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
     device_earnings : { type : mongoose.Schema.Types.Number },  
     team_earnings : { type : mongoose.Schema.Types.Number },
     wallet : { type : mongoose.Schema.Types.Number },
-    status : { type : String }
+    status : { type : String },
+    finance_earnings : { type : mongoose.Schema.Types.Number },
+    total_deposite : { type : mongoose.Schema.Types.Number },
 })
 
 const User = new mongoose.model('User', userSchema);

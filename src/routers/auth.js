@@ -26,7 +26,16 @@ router.post("/auth/login", async(req,res) => {
 router.post("/auth/register", async(req,res) => {
     console.log(req.body);
     try {
-        const user = new User(req.body);
+        const user = new User({
+            phone : req.body.phone,
+            password : req.body.password,
+            name : req.body.name,
+            device_earnings : 0.0,  
+            team_earnings : 0.0,
+            wallet : 0.0,
+            finance_earnings : 0.0,
+            total_deposite : 0.0,
+        });
         const createUser = await user.save();
         res.status(200).json({message : "Register Successfully", user_data : createUser});
     } catch (e) {
