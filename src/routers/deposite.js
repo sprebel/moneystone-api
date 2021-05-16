@@ -47,7 +47,7 @@ router.post("/addDeposite", async(req,res) => {
             })
 
             const addDeposite = await deposite.save();
-            res.status(200).json({message : "Deposite Successfully.", depositeDetails: addDeposite});
+            res.status(200).json({message : "Deposit Successfully.", depositeDetails: addDeposite});
             
         }
 
