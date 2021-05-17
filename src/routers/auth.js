@@ -1,4 +1,5 @@
 const express = require("express");
+const InviteTask = require("../models/invitetask");
 const router = new express.Router();
 const User = require("../models/user");
 
@@ -32,21 +33,83 @@ router.post("/auth/register", async(req,res) => {
         var _ref = req.body.refUser;  //user Refrence, who..?
         var _invitationCode = _name.substring(0, 3).toUpperCase() +  _phone.substring(5); //unique user code
 
-        const user = new User({
-            phone : _phone,
-            password : _pass,
-            name : _name,
-            refUser : _ref,
-            invitationCode : _invitationCode,
-            device_earnings : 0.0,  
-            team_earnings : 0.0,
-            wallet : 0.0,
-            finance_earnings : 0.0,
-            total_deposite : 0.0,
-        });
-        const createUser = await user.save();
+        const findMobileNumber = await User.findOne({'phone' : _phone});
 
-        res.status(200).json({message : "Register Successfully", user_data : createUser});
+        if (findMobileNumber) {
+            return res.status(400).json({message: "Registration Faild, Mobile Number Already Registered..!"});
+        } else {
+            const userRefrence = await User.findOne({"invitationCode" : _ref});
+            console.log(userRefrence);
+        
+            if (!userRefrence) {
+                return res.status(400).json({message: "Invalid refrrel code..!"});
+            } else {
+
+                var addInviteMember;
+                var inviteStage;
+                if (userRefrence.invite_members == 0) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 1;
+                } else if (userRefrence.invite_members <= 3) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 2;
+                } else if (userRefrence.invite_members <= 8) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 5;
+                } else if (userRefrence.invite_members <= 18) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 10;
+                } else if (userRefrence.invite_members <= 38) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 20;
+                } else if (userRefrence.invite_members <= 88) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 50;
+                } else if (userRefrence.invite_members <= 188) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 100;
+                } else if (userRefrence.invite_members <= 388) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 200;
+                } else if (userRefrence.invite_members <= 888) {
+                    addInviteMember = userRefrence.invite_members + 1;
+                    inviteStage = 500;
+                }
+ 
+                const updateUser = await User.findByIdAndUpdate(userRefrence._id, {"invite_members" : addInviteMember, "invite_stage" : inviteStage}, {new:true});
+                
+                console.log(updateUser);
+
+                const user = new User({
+                    phone : _phone,
+                    password : _pass,
+                    name : _name,
+                    invitationCode : _invitationCode,
+                    device_earnings : 0.0,  
+                    team_earnings : 0.0,
+                    wallet : 0.0,
+                    finance_earnings : 0.0,
+                    total_deposite : 0.0,
+                    total_purchase : 0.0,
+                    refUser : _ref,
+                    invite_income : 0.0,
+                    invite_members : 0.0,
+                    invite_stage : 0
+                });
+
+                const createUser = await user.save();
+                // const inviteTask = new InviteTask({
+                //     userId = userRefrence._id,
+                //     userName = userRefrence.name,
+                //     userPhone : userRefrence.userPhone,
+                // });
+                // console.log(createInviteTask);
+                // const createInviteTask = await inviteTask.save();
+        
+                res.status(200).json({message : "Register Successfully", user_data : createUser});
+            }
+        }
+
     } catch (e) {
         res.status(500).json({message: "Error, Mobile number already registed"});
     }

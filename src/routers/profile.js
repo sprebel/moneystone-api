@@ -86,4 +86,31 @@ router.post("/userBankDetails", async(req,res) => {
     }
 })
 
+//invited users
+router.post("/invitesUser", async(req,res) => {
+    try {
+        var _invitationCode = req.body.invitationCode
+        const userDetails = await User.find({"refUser" : _invitationCode});
+        res.send(userDetails);
+
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+})
+
+
+//claim invite income
+router.post("/claimInviteStage", async(req,res) => {
+    try {
+
+        var _invitationCode = req.body.invitationCode
+        var _inviteStage = req.body.inviteStage
+        const userDetails = await User.find({"refUser" : _invitationCode, "invite_stage": _inviteStage});
+        res.send(userDetails);
+        
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+})
+
 module.exports = router;

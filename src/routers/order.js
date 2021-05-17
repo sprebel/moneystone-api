@@ -18,6 +18,9 @@ router.post("/order", async(req,res) => {
         } else if (userDetails.wallet < productDetails.price) {
             return res.status(400).json({message: "You have insufficient wallet balance"});
         } else {
+
+            
+
             // const newProductId = productDetails._id;
             // const newProductLimit = productDetails.minimum;
 

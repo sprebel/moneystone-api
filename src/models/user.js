@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
     phone : { type : String, unique : true },
     password : { type : String },
     name : { type : String },
-    refUser : { type : String },
     invitationCode : { type : String },
     device_earnings : { type : mongoose.Schema.Types.Number },  
     team_earnings : { type : mongoose.Schema.Types.Number },
@@ -13,6 +12,11 @@ const userSchema = new mongoose.Schema({
     status : { type : String },
     finance_earnings : { type : mongoose.Schema.Types.Number },
     total_deposite : { type : mongoose.Schema.Types.Number },
+    total_purchase : { type : mongoose.Schema.Types.Number },
+    refUser : { type : String },
+    invite_income : { type : mongoose.Schema.Types.Number },
+    invite_members : { type: Number },
+    invite_stage : { type: Number },
 })
 
 const User = new mongoose.model('User', userSchema);

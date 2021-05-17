@@ -9,6 +9,7 @@ const orderRouter = require("./routers/order");
 const deviceEarningsRouter = require("./routers/deviceEarnings");
 const recharge = require("./routers/recharge");
 const deposite = require("./routers/deposite");
+const withrawal = require("./routers/withrawal");
 
 const app = express();
 const port = process.env.PORT || 4000
@@ -23,5 +24,6 @@ app.use(orderRouter);
 app.use(deviceEarningsRouter);
 app.use(recharge);
 app.use(deposite);
+app.use(withrawal);
 
 app.listen(port, () => console.log(`connection is setup at ${port}`));
