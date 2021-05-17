@@ -26,10 +26,18 @@ router.post("/auth/login", async(req,res) => {
 router.post("/auth/register", async(req,res) => {
     console.log(req.body);
     try {
+        var _phone = req.body.phone;
+        var _name = req.body.name;
+        var _pass = req.body.password; 
+        var _ref = req.body.refUser;  //user Refrence, who..?
+        var _invitationCode = _name.substring(0, 3).toUpperCase() +  _phone.substring(5); //unique user code
+
         const user = new User({
-            phone : req.body.phone,
-            password : req.body.password,
-            name : req.body.name,
+            phone : _phone,
+            password : _pass,
+            name : _name,
+            refUser : _ref,
+            invitationCode : _invitationCode,
             device_earnings : 0.0,  
             team_earnings : 0.0,
             wallet : 0.0,
@@ -37,6 +45,7 @@ router.post("/auth/register", async(req,res) => {
             total_deposite : 0.0,
         });
         const createUser = await user.save();
+
         res.status(200).json({message : "Register Successfully", user_data : createUser});
     } catch (e) {
         res.status(500).json({message: "Error, Mobile number already registed"});
