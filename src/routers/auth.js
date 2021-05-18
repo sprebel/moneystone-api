@@ -1,5 +1,4 @@
 const express = require("express");
-const InviteTask = require("../models/invitetask");
 const router = new express.Router();
 const User = require("../models/user");
 
