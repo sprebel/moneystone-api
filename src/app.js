@@ -12,7 +12,8 @@ const deposite = require("./routers/deposite");
 const withrawal = require("./routers/withrawal");
 
 const app = express();
-const port = process.env.PORT || 4000
+var serverPort = 4000;
+const port = process.env.PORT || serverPort
 
 app.use(express.json());
 app.use(cors())
