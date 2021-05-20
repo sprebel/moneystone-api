@@ -4,6 +4,7 @@ const User = require("../models/user");
 const Bank = require("../models/bank");
 const Withrawal = require("../models/withrawal");
 const Deposite = require("../models/deposite");
+const DepositeWithrawal = require("../models/depositeWithrawal");
 
 //add withrawal
 router.post("/withrawal", async(req,res) => {
@@ -74,7 +75,7 @@ router.post("/userWithrawal", async(req,res) => {
         const withrawalData = await Withrawal.find();
         res.send(withrawalData);
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        //res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -98,6 +99,11 @@ router.post("/depositWithrawals", async(req,res) => {
         if (!depositeDetails) {
             return res.status(400).json({message: "Invalid deposit id..!"});
         } else { 
+            const depositeWithrawal = DepositeWithrawal({
+                withrawalamount: 0,
+                withrawalDate: 0,
+                depositeDetails: depositeDetails,
+            });
             res.status(400).json({response: depositeDetails});
         }
 

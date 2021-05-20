@@ -80,54 +80,6 @@ router.post("/userDeposite", async(req,res) => {
             if (!userDeposite) {
                 res.status(400).json({error: "No Deposite..!"});
             } else {
-                var date = new Date();
-                var currentDate = date.getDate();
-                var currentMonth = date.getMonth();
-                var currentYear = date.getFullYear();
-
-                var depositeYear;
-                var depositeMonth;
-                var depositeDate;
-                var depositeIncome;
-
-                // for (let i = 0; i < userDeposite.length; i++) {
-                //     depositeDays = userDeposite[i]['days'];
-                //     depositeYear = userDeposite[i]['transactionYear'];
-                //     depositeMonth = userDeposite[i]['transactionMonth'];
-                //     depositeDate = userDeposite[i]['transactionDate'];
-                //     depositeIncome = userDeposite[i]['depositeIncome']; 
-                //     console.log(depositeYear);
-                //     console.log(depositeMonth);
-                //     console.log(depositeDate);
-                //     console.log(depositeIncome);
-
-                //     totalDays = currentDate - depositeDate;
-                //     console.log(totalDays);
-
-                //     // if (depositeDays <= totalDays) {
-                //     //     console.log('Abhi...!');
-                //     //     const updateUser = await User.findByIdAndUpdate(_userId, {"finance_earnings" : depositeIncome}, {new:true});
-                //     //     console.log(updateUser);
-                //     //     console.log('Abhi...!');
-                //     // }
-                // }
-            
-
-                // var financeEarnings;
-                // if (currentYear == userDeposite.transactionYear) {
-                //     //financeEarnings = userDeposite.depositeIncome;
-
-                //     for (let i = 0; i < userDeposite.length; i++) {
-                //         financeEarnings = userDeposite.depositeIncome[i];
-                //         console.log(financeEarnings);
-                //     }
-                // }
-
-                const depositeData = {
-                    financeEarnings: "12345",
-                    deposite: userDeposite
-                };
-
                 res.status(200).json(userDeposite);
             }
         }  
