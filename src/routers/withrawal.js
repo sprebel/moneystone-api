@@ -3,6 +3,7 @@ const router = new express.Router();
 const User = require("../models/user");
 const Bank = require("../models/bank");
 const Withrawal = require("../models/withrawal");
+const Deposite = require("../models/deposite");
 
 //add withrawal
 router.post("/withrawal", async(req,res) => {
@@ -58,7 +59,6 @@ router.get("/withrawal", async(req,res) => {
 router.post("/userWithrawal", async(req,res) => {
     try {
         var _userId = req.body.userId
-
         const userDetails = await User.findById(_userId);
 
         if (!userDetails) {
@@ -74,7 +74,7 @@ router.post("/userWithrawal", async(req,res) => {
         const withrawalData = await Withrawal.find();
         res.send(withrawalData);
     } catch (e) {
-        res.status(500).send(e);
+        res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -86,6 +86,26 @@ router.patch("/withrawal/:id", async(req,res) => {
         res.send(updateWithrawal);
     } catch (e) {
         res.status(500).send(e);
+    }
+})
+
+//deposite withrawal
+router.post("/depositWithrawals", async(req,res) => {
+    try {
+        var _userId = req.body.userId
+        const userDetails = await User.findById(_userId);
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else {
+            const userDeposite = await Deposite.find({'userId' : userDetails._id});
+            if (!userDeposite) {
+                res.status(400).json({message: "No Deposite..!"});
+            } else {
+                res.status(400).json({response: userDeposite});
+            }
+        }
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
     }
 })
 
