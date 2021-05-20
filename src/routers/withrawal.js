@@ -92,18 +92,15 @@ router.patch("/withrawal/:id", async(req,res) => {
 //deposite withrawal
 router.post("/depositWithrawals", async(req,res) => {
     try {
-        var _userId = req.body.userId
-        const userDetails = await User.findById(_userId);
-        if (!userDetails) {
-            return res.status(400).json({message: "Invalid user id..!"});
-        } else {
-            const userDeposite = await Deposite.find({'userId' : userDetails._id});
-            if (!userDeposite) {
-                res.status(400).json({message: "No Deposite..!"});
-            } else {
-                res.status(400).json({response: userDeposite});
-            }
+        //var _userId = req.body.userId
+        var _depositId = req.body.depositId
+        const depositeDetails = await Deposite.findById(_depositId);
+        if (!depositeDetails) {
+            return res.status(400).json({message: "Invalid deposit id..!"});
+        } else { 
+            res.status(400).json({response: depositeDetails});
         }
+
     } catch (error) {
         res.status(500).json({message: "Internal Server Error"});
     }
