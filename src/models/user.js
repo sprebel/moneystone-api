@@ -3,6 +3,7 @@ const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
     phone : { type : String, unique : true },
+    email : { type : String, unique : true },
     password : { type : String },
     name : { type : String },
     invitationCode : { type : String },

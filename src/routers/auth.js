@@ -1,6 +1,8 @@
 const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
+const { Auth, LoginCredentials } = require("two-step-auth");
+
 
 //user login
 router.post("/auth/login", async(req,res) => {
@@ -27,15 +29,19 @@ router.post("/auth/register", async(req,res) => {
     console.log(req.body);
     try {
         var _phone = req.body.phone;
+        var _email = req.body.email;
         var _name = req.body.name;
         var _pass = req.body.password; 
         var _ref = req.body.refUser;  //user Refrence, who..?
         var _invitationCode = _name.substring(0, 3).toUpperCase() +  _phone.substring(5); //unique user code
 
         const findMobileNumber = await User.findOne({'phone' : _phone});
+        const findEmail = await User.findOne({'email' : _email});
 
         if (findMobileNumber) {
             return res.status(400).json({message: "Registration Faild, Mobile Number Already Registered..!"});
+        } else if(findEmail) {
+            return res.status(400).json({message: "Registration Faild, Email Address Already Registered..!"});
         } else {
             const userRefrence = await User.findOne({"invitationCode" : _ref});
             console.log(userRefrence);
@@ -80,9 +86,10 @@ router.post("/auth/register", async(req,res) => {
                 console.log(updateUser);
 
                 const user = new User({
-                    phone : _phone,
-                    password : _pass,
                     name : _name,
+                    phone : _phone,
+                    email: _email,
+                    password : _pass,
                     invitationCode : _invitationCode,
                     device_earnings : 0.0,  
                     team_earnings : 0.0,
@@ -97,13 +104,6 @@ router.post("/auth/register", async(req,res) => {
                 });
 
                 const createUser = await user.save();
-                // const inviteTask = new InviteTask({
-                //     userId = userRefrence._id,
-                //     userName = userRefrence.name,
-                //     userPhone : userRefrence.userPhone,
-                // });
-                // console.log(createInviteTask);
-                // const createInviteTask = await inviteTask.save();
         
                 res.status(200).json({message : "Register Successfully", user_data : createUser});
             }
@@ -116,17 +116,33 @@ router.post("/auth/register", async(req,res) => {
 
 //chnage password
 router.post("/auth/changepass", async(req,res) => {
-    const { phone, password } = req.body;
+    const { email, password } = req.body;
+
+    // This should have less secure apps enabled
+    LoginCredentials.mailID = "mymoneystone@gmail.com";
+
+    // You can store them in your env variables and
+    // access them, it will work fine
+    LoginCredentials.password = "Money@2021"; 
+    LoginCredentials.use = true;
+
     try {
-        const userDetails = await User.findOne({'phone' : phone});
+        const userDetails = await User.findOne({'email' : email});
         if (!userDetails) {
             res.status(400).json({error: "User not found..!"});
         } else if(password == null || password == "") {
             res.status(400).json({error: "Password can't black..!"});
         } else {
-            const updatePass = await User.findOneAndUpdate({'phone' : phone}, {"password" : password}, {new:true});
-            //res.send(updatePass);
-            res.json({message : "New password set successfully", user_data : updatePass});
+            
+            const mailRes = await Auth(email, "Money Stone");
+            console.log(mailRes);
+            console.log(mailRes.mail);
+            console.log(mailRes.OTP);
+
+            // const updatePass = await User.findOneAndUpdate({'email' : email}, {"password" : password}, {new:true});
+            // res.json({message : "New password set successfully", user_data : updatePass});
+
+            res.json({message : "OTP send..!", details: mailRes});
         }
     } catch (e) {
         res.status(500).json({error : e});

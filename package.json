@@ -24,6 +24,7 @@
     "multer-gridfs-storage": "^4.2.0",
     "node": "^16.1.0",
     "nodemon": "^2.0.7",
+    "two-step-auth": "^1.1.2",
     "upgrade": "^1.1.0",
     "upload": "^1.1.1",
     "validator": "^13.6.0"
