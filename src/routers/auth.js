@@ -167,18 +167,19 @@ router.post("/auth/singupOtp", async(req,res) => {
 
 //verfied OTP
 router.post("/auth/verifyotp", async(req,res) => {
-    
-    var email = req.body.email;
+
+    const _email = req.body.email;
 
     try {
-        const userDetails = await User.findOne({'email' : email});
+        const userDetails = await User.findOne({'email' : _email});
+        var random = Math.floor(100000 + Math.random() * 900000).toString();
         if (!userDetails) {
-            res.status(200).json({message: "User not found..!"});
+            return res.status(200).json({message: "User not found..!"});
         } else {
-            var random = Math.floor(100000 + Math.random() * 900000).toString();
+            
             await smtpTransport.sendMail({
                 from: 'mymoneystone@gmail.com',
-                to: email,
+                to: _email,
                 subject: 'Money Stone - Forget Password Confirmation OTP',
                 text: "Verfication OTP to change your\nMoney Stone Account Password\n" + random.toString(),
             });
@@ -188,13 +189,11 @@ router.post("/auth/verifyotp", async(req,res) => {
                 email: userDetails.email,
             });
             const sendOTP = await verifyOTP.save();
-            res.status(200).send(sendOTP);
-
-            res.json({message : "OTP send..!", otp: random});
+            return res.status(200).send(sendOTP);
         }
 
     } catch (e) {
-        res.status(500).json({error : e});
+        res.status(500).json({error:e});
     }
 })
 
