@@ -218,12 +218,10 @@ router.post("/auth/changepass", async(req,res) => {
 
             if (_validOTP == otp) {
                 const updatePass = await User.findOneAndUpdate({'email' : _email}, {"password" : _password}, {new:true});
-                res.json({message : "New password set successfully", user_data : updatePass});
+                res.status(200).json({message : "New password set successfully", user_data : updatePass});
             } else {
-                res.json({message : "Faild, OTP doesn't match"});
+                res.status(400).json({message : "Faild, OTP doesn't match"});
             }
-            console.log(_validOTP);
-            console.log(otp);
         }
     } catch (e) {
         res.status(500).json({error : e});
