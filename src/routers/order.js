@@ -19,8 +19,6 @@ router.post("/order", async(req,res) => {
             return res.status(400).json({message: "You have insufficient wallet balance"});
         } else {
 
-            
-
             // const newProductId = productDetails._id;
             // const newProductLimit = productDetails.minimum;
 
@@ -35,10 +33,10 @@ router.post("/order", async(req,res) => {
             //     console.log('Yes');
             // }
 
-
             var minusWalletAmt = userDetails.wallet - productDetails.price;
+            var addPurchase = userDetails.total_purchase + productDetails.price;
             
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt, "total_purchase" : addPurchase}, {new:true});
 
             const orderDate = req.body.orderDay + '-' +  req.body.orderMonth + '-' + req.body.orderYear;
             const expiryDate = req.body.orderYear + 1;
