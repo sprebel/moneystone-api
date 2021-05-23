@@ -19,20 +19,6 @@ router.post("/order", async(req,res) => {
             return res.status(400).json({message: "You have insufficient wallet balance"});
         } else {
 
-            // const newProductId = productDetails._id;
-            // const newProductLimit = productDetails.minimum;
-
-            // const userOrder = await Order.find({'userId' : userDetails._id});
-            // res.send(userOrder);
-
-            // for (let i = 0; i < userOrder.length; i++) {
-            //     const allProductsId = userOrder[i]['orderDetails']['_id'];
-            //     if (newProductId == allProductsId) {
-            //         console.log('IN Yes');
-            //     }
-            //     console.log('Yes');
-            // }
-
             var minusWalletAmt = userDetails.wallet - productDetails.price;
             var addPurchase = userDetails.total_purchase + productDetails.price;
             
@@ -52,6 +38,8 @@ router.post("/order", async(req,res) => {
                 orderExpireDateTime: req.body.orderDay + '-' +  req.body.orderMonth + '-' + expiryDate + ' '  + orderTimeHour + ':' + orderTimeMinitues,
                 lastClaimTime: req.body.orderTimeHour,
                 lastClaimDate: req.body.orderDay,
+                lastClaimMonth: req.body.orderMonth,
+                lastClaimYear: req.body.orderYear,
                 totalClaimAmt: 0,
             });
             const createOrder = await order.save();

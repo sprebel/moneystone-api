@@ -3,8 +3,8 @@ const validator = require("validator");
 const depositeSchema = require("./deposite");
 
 const depositeWithrawalSchema = new mongoose.Schema({
-    withrawalamount: {type: Number},
-    withrawalDate: {type: Number},
+    amount: {type: Number},
+    transactionDate: {type: String},
     depositeDetails : { type: mongoose.Schema.Types, ref: depositeSchema }
 })
 

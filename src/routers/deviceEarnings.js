@@ -15,25 +15,36 @@ router.post("/deviceEarnigs", async(req,res) => {
 
             var hourlyRate = orderDetails.orderDetails.hourlyPrice;
 
-            const lastClaimTime = orderDetails.lastClaimTime;
-            const lastClaimDate = orderDetails.lastClaimDate;
+            const _lastClaimTime = orderDetails.lastClaimTime;
+            const _lastClaimDate = orderDetails.lastClaimDate;
+            const _lastClaimMonth = orderDetails.lastClaimMonth;
 
             var date = new Date();
             var currentHour = date.getHours();
             var currentDate = date.getDate();
+            var currentMonth = date.getMonth() + 1;
+            var currentYear = date.getFullYear();
 
-            console.log(hourlyRate);
-            console.log(lastClaimTime);
-            console.log(currentDate);
+            console.log(currentHour);
             console.log(currentHour);
 
             var remainingClaim;
 
-            if (lastClaimDate == currentDate) {
-                remainingClaim = (currentHour - lastClaimTime) * hourlyRate;
+            if (currentMonth == _lastClaimMonth) {
+                if (_lastClaimDate == currentDate) {
+                    remainingClaim = (currentHour - _lastClaimTime) * hourlyRate;
+                    console.log(`Today` + remainingClaim);
+                } else {
+                    remainingClaim = (((currentDate - _lastClaimDate) * 24) + (currentHour - _lastClaimTime)) * hourlyRate;
+                    console.log(remainingClaim);
+                    console.log(`Not Today` + remainingClaim);
+                }
             } else {
-                remainingClaim = (((currentDate - lastClaimDate) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
+                remainingClaim = (((30 - _lastClaimDate + _lastClaimDate - 1) * 24) + (currentHour - _lastClaimDate)) * hourlyRate;
+                console.log(`Not Currrent Month` + remainingClaim);
             }
+
+            
             console.log(remainingClaim);     
 
             const deviceEarnigs = new DeviceEarnings({
@@ -65,17 +76,24 @@ router.post("/deviceRedeem", async(req,res) => {
 
             const lastClaimTime = orderDetails.lastClaimTime;
             const lastClaimDate = orderDetails.lastClaimDate;
+            const lastClaimMonth = orderDetails.lastClaimMonth;
 
             var date = new Date();
             var currentHour = date.getHours();
             var currentDate = date.getDate();
+            var currentMonth = date.getMonth();
+            var currentYear = date.getFullYear();
 
             var remainingClaim;
 
-            if (lastClaimDate == currentDate) {
-                remainingClaim = (currentHour - lastClaimTime) * hourlyRate;
+            if (lastClaimMonth == currentMonth) {
+                if (lastClaimDate == currentDate) {
+                    remainingClaim = (currentHour - lastClaimTime) * hourlyRate;
+                } else {
+                    remainingClaim = (((currentDate - lastClaimDate) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
+                }
             } else {
-                remainingClaim = (((currentDate - lastClaimDate) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
+                remainingClaim = (((30 - lastClaimDate + currentDate - 1) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
             }
             
             console.log(remainingClaim);
@@ -91,16 +109,17 @@ router.post("/deviceRedeem", async(req,res) => {
                 {
                     "lastClaimTime" : currentHour,
                     "lastClaimDate" : currentDate,
+                    "lastClaimMonth" : currentMonth,
+                    "lastClaimYear" : currentYear,
                     "totalClaimAmt" : totalClaimAmt,
-                }, 
-                {new:true});
+                }, {new:true});
 
-            res.status(200).json({message: "Reedem Successfully."});
+            return res.status(200).json({message: "Reedem Successfully."});
             
         }
 
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 

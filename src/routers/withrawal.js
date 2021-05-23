@@ -93,18 +93,33 @@ router.patch("/withrawal/:id", async(req,res) => {
 //deposite withrawal
 router.post("/depositWithrawals", async(req,res) => {
     try {
-        //var _userId = req.body.userId
+        var _userId = req.body.userId
         var _depositId = req.body.depositId
+        var _amount = req.body.amount
         const depositeDetails = await Deposite.findById(_depositId);
+        
+        
         if (!depositeDetails) {
             return res.status(400).json({message: "Invalid deposit id..!"});
         } else { 
-            const depositeWithrawal = DepositeWithrawal({
-                withrawalamount: 0,
-                withrawalDate: 0,
+
+            const userDetails = await User.findById(_userId);
+
+            var date = new Date();
+            var currentTime = date.toISOString();
+
+            var addWalletAmt = userDetails.wallet + _amount;
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt}, {new:true});
+            const deleteDeposite = await Deposite.findByIdAndDelete(_depositId);
+
+            const depositeWithrawal = new DepositeWithrawal({
+                amount: _amount,
+                transactionDate: currentTime,
                 depositeDetails: depositeDetails,
             });
-            res.status(400).json({response: depositeDetails});
+
+            const addWithrawal = await depositeWithrawal.save();
+            return res.status(200).json({message : "Withrawal Succefully to wallet.", "withrawalDetails": addWithrawal});
         }
 
     } catch (error) {

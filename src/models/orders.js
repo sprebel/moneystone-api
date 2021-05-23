@@ -11,6 +11,8 @@ const orderSchema = new mongoose.Schema({
     orderExpireDateTime: { type: String },
     orderDetails: {type: mongoose.Schema.Types, ref: productSchema},
     lastClaimTime: {type: Number},
+    lastClaimYear: {type: Number},
+    lastClaimMonth: {type: Number},
     lastClaimDate: {type: Number},
     totalClaimAmt: {type: Number},
 })

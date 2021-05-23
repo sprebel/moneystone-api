@@ -3,6 +3,7 @@ const router = new express.Router();
 const User = require("../models/user");
 const VerifyOTP = require("../models/verifyOTP");
 var nodemailer = require("nodemailer");
+const Invite = require("../models/invite");
 
 var smtpTransport = nodemailer.createTransport({
     // host: "mail.moneystone.com",
@@ -103,11 +104,7 @@ router.post("/auth/register", async(req,res) => {
                         addInviteMember = userRefrence.invite_members + 1;
                         inviteStage = 500;
                     }
-     
-                    const updateUser = await User.findByIdAndUpdate(userRefrence._id, {"invite_members" : addInviteMember, "invite_stage" : inviteStage}, {new:true});
-                    
-                    console.log(updateUser);
-    
+
                     const user = new User({
                         name : _name,
                         phone : _phone,
@@ -125,7 +122,17 @@ router.post("/auth/register", async(req,res) => {
                         invite_members : 0.0,
                         invite_stage : 0
                     });
-    
+
+                    const createInvite = await Invite({
+                        userId : userRefrence._id,
+                        refUser : user,
+                        stage : inviteStage,
+                        compeleted : false,
+                        redeem : 0,
+                    })
+                    const saveInvite = await createInvite.save();
+     
+                    const addRefrence = await User.findByIdAndUpdate(userRefrence._id, {"invite_members" : addInviteMember, "invite_stage" : inviteStage}, {new:true});
                     const createUser = await user.save();
             
                     res.status(200).json({message : "Register Successfully", user_data : createUser});

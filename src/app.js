@@ -1,5 +1,4 @@
 const express = require("express");
-var cors = require('cors');
 require("./db/conn");
 const userRouter = require("./routers/user");
 const authRouter = require("./routers/auth");
@@ -10,13 +9,13 @@ const deviceEarningsRouter = require("./routers/deviceEarnings");
 const recharge = require("./routers/recharge");
 const deposite = require("./routers/deposite");
 const withrawal = require("./routers/withrawal");
+const invite = require("./routers/invite");
 
 const app = express();
 var serverPort = 4000;
 const port = process.env.PORT || serverPort
 
 app.use(express.json());
-app.use(cors())
 app.use(userRouter);
 app.use(authRouter);
 app.use(profileRouter);
@@ -26,5 +25,6 @@ app.use(deviceEarningsRouter);
 app.use(recharge);
 app.use(deposite);
 app.use(withrawal);
+app.use(invite);
 
 app.listen(port, () => console.log(`connection is setup at ${port}`));
