@@ -14,7 +14,7 @@ router.get("/allInvite", async(req,res) => {
 })
 
 //get invite by user
-router.get("/userInvite", async(req,res) => {
+router.post("/userInvite", async(req,res) => {
     try {
         var _userId = req.body.userId
         const userDetails = await User.findById(_userId);
