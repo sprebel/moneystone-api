@@ -61,17 +61,17 @@ router.post("/auth/register", async(req,res) => {
         } else {
 
             const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
-            var otp = otpDetails[0]['otp'] ?? '00000';
+            var otp = otpDetails[0]['otp'] ?? '00000000';
 
             if (_validOTP != otp) {
                 res.json({message : "Faild, OTP doesn't match"});
             } 
             else {
-                const userRefrence = await User.findOne({"invitationCode" : _ref});
-                console.log(userRefrence);
-            
+                const userRefrence = await User.findOne({"invitationCode" : _ref});            
+                
                 if (!userRefrence) {
                     return res.status(400).json({message: "Invalid refrrel code..!"});
+                    
                 } else {
     
                     var addInviteMember;
@@ -135,7 +135,7 @@ router.post("/auth/register", async(req,res) => {
                     const addRefrence = await User.findByIdAndUpdate(userRefrence._id, {"invite_members" : addInviteMember, "invite_stage" : inviteStage}, {new:true});
                     const createUser = await user.save();
             
-                    res.status(200).json({message : "Register Successfully", user_data : createUser});
+                    return res.status(200).json({message : "Register Successfully", user_data : createUser});
                 }
             
             }
