@@ -52,7 +52,8 @@ router.post("/inviteRedeem", async(req,res) => {
             return res.status(400).json({message: "Faild Redeem, Friend not spend..!"});
         } else {
             var addWalletAmount = userDetails.wallet + 100;
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmount}, {new:true});
+            var addInviteIncome = userDetails.invite_income + 100;
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmount, "invite_income" : addInviteIncome}, {new:true});
             const updateInvite = await Invite.findByIdAndUpdate(_inviteId, {"redeem" : 100, "compeleted" : true}, {new:true});
             return res.status(200).json({message: "Invite Friend Redeem Successful."})
         }
