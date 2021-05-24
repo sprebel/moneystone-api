@@ -81,7 +81,7 @@ router.post("/deviceRedeem", async(req,res) => {
             var date = new Date();
             var currentHour = date.getHours();
             var currentDate = date.getDate();
-            var currentMonth = date.getMonth();
+            var currentMonth = date.getMonth() + 1;
             var currentYear = date.getFullYear();
 
             var remainingClaim;
