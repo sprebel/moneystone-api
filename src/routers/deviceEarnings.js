@@ -59,6 +59,11 @@ router.post("/deviceRedeem", async(req,res) => {
     try {
         var _userId = req.body.userId
         var _orderId = req.body.orderId;
+        var _currentTime = req.body.currentTime;
+        var _currentDate = req.body.currentDate;
+        var _currentMonth = req.body.currentMonth;
+        var _currentYear = req.body.currentYear;
+        
         const orderDetails = await Order.findById(_orderId);
         const userDetails = await User.findById(_userId);
         if (!userDetails) {
@@ -73,22 +78,16 @@ router.post("/deviceRedeem", async(req,res) => {
             const lastClaimDate = orderDetails.lastClaimDate;
             const lastClaimMonth = orderDetails.lastClaimMonth;
 
-            var date = new Date();
-            var currentHour = date.getHours();
-            var currentDate = date.getDate();
-            var currentMonth = date.getMonth() + 1;
-            var currentYear = date.getFullYear();
-
             var remainingClaim;
 
-            if (lastClaimMonth == currentMonth) {
-                if (lastClaimDate == currentDate) {
-                    remainingClaim = (currentHour - lastClaimTime) * hourlyRate;
+            if (lastClaimMonth == _currentMonth) {
+                if (lastClaimDate == _currentDate) {
+                    remainingClaim = (_currentTime - lastClaimTime) * hourlyRate;
                 } else {
-                    remainingClaim = (((currentDate - lastClaimDate) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
+                    remainingClaim = (((_currentDate - lastClaimDate) * 24) + (_currentTime - lastClaimTime)) * hourlyRate;
                 }
             } else {
-                remainingClaim = (((30 - lastClaimDate + currentDate - 1) * 24) + (currentHour - lastClaimTime)) * hourlyRate;
+                remainingClaim = (((30 - lastClaimDate + _currentDate - 1) * 24) + (_currentTime - lastClaimTime)) * hourlyRate;
             }
             
             console.log(remainingClaim);
