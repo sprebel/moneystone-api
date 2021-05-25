@@ -101,10 +101,10 @@ router.post("/deviceRedeem", async(req,res) => {
 
             const updateOrder = await Order.findByIdAndUpdate(_orderId, 
                 {
-                    "lastClaimTime" : currentHour,
-                    "lastClaimDate" : currentDate,
-                    "lastClaimMonth" : currentMonth,
-                    "lastClaimYear" : currentYear,
+                    "lastClaimTime" : _currentTime,
+                    "lastClaimDate" : _currentDate,
+                    "lastClaimMonth" : _currentMonth,
+                    "lastClaimYear" : _currentYear,
                     "totalClaimAmt" : totalClaimAmt,
                 }, {new:true});
 
