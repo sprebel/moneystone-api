@@ -8,6 +8,11 @@ const DeviceEarnings = require('../models/deviceEarnings');
 router.post("/deviceEarnigs", async(req,res) => {
     try {
         var _orderId = req.body.orderId;
+        var _currentTime = req.body.currentTime;
+        var _currentDate = req.body.currentDate;
+        var _currentMonth = req.body.currentMonth;
+        var _currentYear = req.body.currentYear;
+
         const orderDetails = await Order.findById(_orderId);
         if (!orderDetails) {
             return res.status(400).json({message: "Product not found..!"});
@@ -19,23 +24,13 @@ router.post("/deviceEarnigs", async(req,res) => {
             const _lastClaimDate = orderDetails.lastClaimDate;
             const _lastClaimMonth = orderDetails.lastClaimMonth;
 
-            var date = new Date();
-            var currentHour = date.getHours();
-            var currentDate = date.getDate();
-            var currentMonth = date.getMonth() + 1;
-            var currentYear = date.getFullYear();
-
-            console.log(currentHour);
-            console.log(currentHour);
-
             var remainingClaim;
-
-            if (currentMonth == _lastClaimMonth) {
-                if (_lastClaimDate == currentDate) {
-                    remainingClaim = (currentHour - _lastClaimTime) * hourlyRate;
+            if (_currentMonth == _lastClaimMonth) {
+                if (_lastClaimDate == _currentDate) {
+                    remainingClaim = (_currentTime - _lastClaimTime) * hourlyRate;
                     console.log(`Today` + remainingClaim);
                 } else {
-                    remainingClaim = (((currentDate - _lastClaimDate) * 24) + (currentHour - _lastClaimTime)) * hourlyRate;
+                    remainingClaim = (((_currentDate - _lastClaimDate) * 24) + (_currentTime - _lastClaimTime)) * hourlyRate;
                     console.log(remainingClaim);
                     console.log(`Not Today` + remainingClaim);
                 }
