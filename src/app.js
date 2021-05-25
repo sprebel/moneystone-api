@@ -1,5 +1,6 @@
 const express = require("express");
 require("./db/conn");
+var cors = require('cors')
 const userRouter = require("./routers/user");
 const authRouter = require("./routers/auth");
 const profileRouter = require("./routers/profile");
@@ -16,6 +17,7 @@ var serverPort = 4000;
 const port = process.env.PORT || serverPort
 
 app.use(express.json());
+app.use(cors());
 app.use(userRouter);
 app.use(authRouter);
 app.use(profileRouter);
