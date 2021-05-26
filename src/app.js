@@ -11,6 +11,7 @@ const recharge = require("./routers/recharge");
 const deposite = require("./routers/deposite");
 const withrawal = require("./routers/withrawal");
 const invite = require("./routers/invite");
+const appVersion = require("./routers/appVersion");
 
 const app = express();
 var serverPort = 4000;
@@ -28,5 +29,6 @@ app.use(recharge);
 app.use(deposite);
 app.use(withrawal);
 app.use(invite);
+app.use(appVersion);
 
 app.listen(port, () => console.log(`connection is setup at ${port}`));
