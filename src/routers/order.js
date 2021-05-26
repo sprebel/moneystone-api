@@ -54,7 +54,7 @@ router.post("/order", async(req,res) => {
 //get all orders
 router.get("/order", async(req,res) => {
     try {
-        const userOrder = await Order.find();
+        const userOrder = await Order.find().sort({$natural: - 1}).limit(1);
         res.send(userOrder);
     } catch (e) {
         res.status(500).json({message: "Internal Server Error"});
