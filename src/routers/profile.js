@@ -86,6 +86,39 @@ router.post("/userBankDetails", async(req,res) => {
     }
 })
 
+//update bank details
+router.post("/updateBankDetails", async(req,res) => {
+    try {
+        var _userId = req.body.userId
+        const userDetails = await User.findById(_userId);
+
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else {
+            const bankDetails = await Bank.findOne({'userId': _userId});
+            var bankDetailsId = bankDetails._id;
+            
+            var bank = {
+                accountName: req.body.accountName,
+                mobile: req.body.mobile,
+                email: req.body.email,
+                bankAccount:req.body.bankAccount,
+                bankName: req.body.bankName,
+                upiId: req.body.upiId,
+                ifsc: req.body.ifsc,
+                userId: userDetails._id
+            };
+            const updateBankDetails = await Bank.findByIdAndUpdate(bankDetailsId, bank, {new:true});
+            res.status(200).send(updateBankDetails);
+            
+        }
+        
+    } catch (e) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+})
+
+
 //invited users
 router.post("/invitesUser", async(req,res) => {
     try {
