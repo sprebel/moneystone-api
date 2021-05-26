@@ -17,7 +17,7 @@ router.post("/user", async(req,res) => {
 //get all user
 router.get("/user", async(req,res) => {
     try {
-        const userData = await User.find().sort({$natural: - 1}).limit(1);
+        const userData = await User.find().sort({$natural: - 1});
         res.send(userData);
     } catch (e) {
         res.status(500).send(e);

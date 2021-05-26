@@ -50,7 +50,7 @@ router.post("/withrawal", async(req,res) => {
 //get all withdrawals
 router.get("/withrawal", async(req,res) => {
     try {
-        const withrawalData = await Withrawal.find().sort({$natural: - 1}).limit(1);
+        const withrawalData = await Withrawal.find().sort({$natural: - 1});
         res.send(withrawalData);
     } catch (e) {
         res.status(500).send(e);
