@@ -12,13 +12,25 @@ router.post("/withrawal", async(req,res) => {
     try {
         var _userId = req.body.userId
         var _amount = req.body.amount
+        var _requestDate = req.body.requestDate
        
         const userDetails = await User.findById(_userId);
+        const bankDetails = await Bank.findOne({'userId': _userId});
+        const userWithrawal = await Withrawal.find({'userId' : _userId}).sort({$natural: - 1}).limit(1);
+
+        console.log(userWithrawal);
+        console.log(userWithrawal.length);
 
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else if (userDetails.wallet < _amount) {
             return res.status(400).json({message: "You have insufficient wallet balance"});
+        } else if (!bankDetails) {
+            return res.status(400).json({message: "Please Add Bank Details"});
+        } else if (userDetails.total_purchase == 0.0) {
+            return res.status(400).json({message: "First Recharge and purchase device after withrawal eligibility"});
+        } else if (userWithrawal.length != 0 && userWithrawal[0]['requestDate'] == _requestDate) {
+            return res.status(400).json({message: "Per day 1 withrawal available, Try tomorrow"});
         } else {
             var date = new Date();
             var currentTime = date.toISOString();
@@ -27,23 +39,23 @@ router.post("/withrawal", async(req,res) => {
 
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt}, {new:true});
 
-            const bankDetails = await Bank.findOne({'userId': _userId});
             const withdrawals = new Withrawal({
                 amount : _amount,
                 status : "Pending",
                 userId : _userId,
                 userDetails : userDetails,
                 bankDetails : bankDetails,
-                requestTime : currentTime
+                requestTime : currentTime,
+                requestDate : _requestDate
             });
 
             const sendWithrawalReq = await withdrawals.save();
-            res.status(200).json({message : "Withrawal Request Sent.", withrawalDetails: sendWithrawalReq});
+            return res.status(200).json({message : "Withrawal Request Sent.", withrawalDetails: sendWithrawalReq});
         }
 
 
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -83,7 +95,24 @@ router.post("/userWithrawal", async(req,res) => {
 router.patch("/withrawal/:id", async(req,res) => {
     try {
         const _id = req.params.id;
-        const updateWithrawal = await Withrawal.findByIdAndUpdate(_id, req.body, {new:true});
+        const _status = req.body.status;
+        const withrawalDetails = await Withrawal.findById(_id);
+        var withrawalAmount = withrawalDetails.amount;
+
+        var withrawalUserId = withrawalDetails.userDetails._id;
+        const withrawalUser = await User.findById(withrawalUserId);
+        var withrawalUserWallet = withrawalUser.wallet;
+        
+        console.log(withrawalAmount);
+        console.log(withrawalUserId);
+        console.log(withrawalUserWallet);
+
+        if (_status == "Cancel") {
+            var addWalletAmt = withrawalUserWallet + withrawalAmount
+            await User.findByIdAndUpdate(withrawalUserId, {"wallet" : addWalletAmt}, {new:true});
+        }
+
+        const updateWithrawal = await Withrawal.findByIdAndUpdate(_id, {"status" : _status}, {new:true});   
         res.send(updateWithrawal);
     } catch (e) {
         res.status(500).send(e);

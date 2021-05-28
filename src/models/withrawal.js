@@ -10,6 +10,7 @@ const withdrawalSchema = new mongoose.Schema({
     userDetails: {type: mongoose.Schema.Types, ref: userSchema},
     bankDetails: {type: mongoose.Schema.Types, ref: bankSchema},
     requestTime: {type: mongoose.Schema.Types, ref: bankSchema},
+    requestDate: {type: String},
 })
 
 const Withrawal = new mongoose.model('Withrawal', withdrawalSchema);
