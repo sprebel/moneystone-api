@@ -77,7 +77,7 @@ router.post("/userWithrawal", async(req,res) => {
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
-            const userWithrawal = await Withrawal.find({'userId' : _userId});
+            const userWithrawal = await Withrawal.find({'userId' : _userId}).sort({$natural: - 1});
             if (!userWithrawal) {
                 res.status(400).json({error: "No Withrawal..!"});
             } else {
