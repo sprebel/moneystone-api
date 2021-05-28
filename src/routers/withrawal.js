@@ -29,10 +29,8 @@ router.post("/withrawal", async(req,res) => {
             return res.status(400).json({message: "Please Add Bank Details"});
         } else if (userDetails.total_purchase == 0.0) {
             return res.status(400).json({message: "First Recharge and purchase device after withrawal eligibility"});
-        } else if (userWithrawal.length != 0) {
-            if (userWithrawal[0]['requestDate'] == _requestDate) {
-                return res.status(400).json({message: "Per day 1 withrawal available, Try tomorrow"});
-            }
+        } else if (userWithrawal.length != 0 && userWithrawal[0]['requestDate'] == _requestDate) {
+            return res.status(400).json({message: "Per day 1 withrawal available, Try tomorrow"});
         } else {
             var date = new Date();
             var currentTime = date.toISOString();
