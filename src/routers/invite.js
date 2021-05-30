@@ -76,7 +76,7 @@ router.post("/userInvite", async(req,res) => {
                     const findRefUser = await User.findById(refUserid);
 
                     userInviteListData.push({
-                        "id" : id,
+                        "_id" : id,
                         "userId" : userid,
                         "refUser": {
                             "_id": refUserid,
@@ -147,6 +147,9 @@ router.delete("/invite/:id", async(req,res) => {
         res.status(500).send(e);
     }
 })
+
+//invite user list
+router.post("/teamMemers")
 
 
 module.exports = router;
