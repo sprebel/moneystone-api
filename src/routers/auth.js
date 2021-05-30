@@ -113,7 +113,7 @@ router.post("/auth/register", async(req,res) => {
                         invitationCode : _invitationCode,
                         device_earnings : 0.0,  
                         team_earnings : 0.0,
-                        wallet : 0.0,
+                        wallet : 100.0,
                         finance_earnings : 0.0,
                         total_deposite : 0.0,
                         total_purchase : 0.0,
