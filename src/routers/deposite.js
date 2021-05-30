@@ -28,7 +28,7 @@ router.post("/addDeposite", async(req,res) => {
             var _depositeIncome = (_depositePer / 100) * _depositeAmt;
 
             var addFinaceAmt = userDetails.finance_earnings + _depositeIncome;
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt, "total_deposite" : addDepositeAmt, "finance_earnings" : addFinaceAmt}, {new:true});
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : minusWalletAmt, "total_deposite" : addDepositeAmt}, {new:true});
     
             const deposite = new Deposite({
                 userId: userDetails._id,

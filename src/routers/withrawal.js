@@ -125,6 +125,8 @@ router.post("/depositWithrawals", async(req,res) => {
         var _userId = req.body.userId
         var _depositId = req.body.depositId
         var _amount = req.body.amount
+        var _financeAmt = req.body.financeAmt
+        var _depositAmt = req.body.depositAmt
         const depositeDetails = await Deposite.findById(_depositId);
         
         
@@ -138,7 +140,9 @@ router.post("/depositWithrawals", async(req,res) => {
             var currentTime = date.toISOString();
 
             var addWalletAmt = userDetails.wallet + _amount;
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt}, {new:true});
+            var addFinanceEarningAmt = userDetails.finance_earnings + _financeAmt;
+            var minusDepositAmt = userDetails.total_deposite - _depositAmt;
+            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt, "finance_earnings" : addFinanceEarningAmt, "total_deposite" : minusDepositAmt}, {new:true});
             const deleteDeposite = await Deposite.findByIdAndDelete(_depositId);
 
             const depositeWithrawal = new DepositeWithrawal({
