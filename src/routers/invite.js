@@ -14,6 +14,36 @@ router.get("/allInvite", async(req,res) => {
 })
 
 //get invite by user
+// router.post("/userInvite", async(req,res) => {
+//     try {
+//         var _userId = req.body.userId
+//         const userDetails = await User.findById(_userId);
+//         if (!userDetails) {
+//             return res.status(400).json({message: "Invalid user id..!"});
+//         } else {
+            
+//             const userInvites = await Invite.find({'userId' : userDetails._id});
+//             if (!userInvites) {
+//                 return res.status(400).json({message: "No Invite Friends..!"});
+//             } else {
+
+//                 var invitedUserDetails
+//                 for (let i = 0; i < userInvites.length; i++) {
+//                     const userid = userInvites[i]['refUser']['_id'];
+//                     invitedUserDetails = userid;
+//                     console.log(invitedUserDetails);
+//                 }
+
+//                 return res.send(userInvites);
+//             }
+//         }
+//     } catch (error) {
+//         return res.status(500).json({message: "Internal Server Error"});
+//     }
+// })
+
+
+//user invite details
 router.post("/userInvite", async(req,res) => {
     try {
         var _userId = req.body.userId
@@ -21,17 +51,56 @@ router.post("/userInvite", async(req,res) => {
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
+            
             const userInvites = await Invite.find({'userId' : userDetails._id});
             if (!userInvites) {
                 return res.status(400).json({message: "No Invite Friends..!"});
             } else {
-                return res.send(userInvites);
+
+                const userInviteListData = [];
+
+                for (let i = 0; i < userInvites.length; i++) {
+                    const id = userInvites[i]['_id'];
+                    const userid = userInvites[i]['userId'];
+                    const refUserid = userInvites[i]['refUser']['_id'];
+                    // const name = userInvites[i]['refUser']['name'];
+                    // const phone = userInvites[i]['refUser']['phone'];
+                    // const email = userInvites[i]['refUser']['email'];
+                    const invitationCode = userInvites[i]['refUser']['invitationCode'];
+                    const refbyUser = userInvites[i]['refUser']['refUser'];
+
+                    const stage = userInvites[i]['stage'];
+                    const compeleted = userInvites[i]['compeleted'];
+                    const redeem = userInvites[i]['redeem'];
+
+                    const findRefUser = await User.findById(refUserid);
+
+                    userInviteListData.push({
+                        "id" : id,
+                        "userId" : userid,
+                        "refUser": {
+                            "_id": refUserid,
+                            "name": findRefUser.name,
+                            "phone": findRefUser.phone,
+                            "email": findRefUser.email,
+                            "invitationCode": invitationCode,
+                            "refUser": refbyUser,
+                            "total_purchase": findRefUser.total_purchase,
+                        },
+                        "stage": stage,
+                        "compeleted": compeleted,
+                        "redeem": redeem,
+                    });
+                }
+                
+                return res.send(userInviteListData);
             }
         }
     } catch (error) {
         return res.status(500).json({message: "Internal Server Error"});
     }
 })
+
 
 //redeem Invite
 router.post("/inviteRedeem", async(req,res) => {
