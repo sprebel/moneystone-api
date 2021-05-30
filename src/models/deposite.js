@@ -14,6 +14,8 @@ const depositeSchema = new mongoose.Schema({
     userId: {type: mongoose.Schema.Types, ref: userSchema},
     userName: {type: mongoose.Schema.Types, ref: userSchema},
     userPhone: {type: mongoose.Schema.Types, ref: userSchema},
+},{
+    timestamps: true
 })
 
 const Deposite = new mongoose.model('Deposite', depositeSchema);

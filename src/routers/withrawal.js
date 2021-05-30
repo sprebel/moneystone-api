@@ -87,7 +87,7 @@ router.post("/userWithrawal", async(req,res) => {
         const withrawalData = await Withrawal.find();
         res.send(withrawalData);
     } catch (e) {
-        //res.status(500).json({message: "Internal Server Error"});
+        res.status(500).json({message: "Internal Server Error"});
     }
 });
 

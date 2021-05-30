@@ -47,12 +47,13 @@ router.get("/allInvite", async(req,res) => {
 router.post("/userInvite", async(req,res) => {
     try {
         var _userId = req.body.userId
+        const _compeleted = req.body.compeleted;
         const userDetails = await User.findById(_userId);
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             
-            const userInvites = await Invite.find({'userId' : userDetails._id});
+            const userInvites = await Invite.find({'userId' : userDetails._id, compeleted: _compeleted});
             if (!userInvites) {
                 return res.status(400).json({message: "No Invite Friends..!"});
             } else {
@@ -63,18 +64,12 @@ router.post("/userInvite", async(req,res) => {
                     const id = userInvites[i]['_id'];
                     const userid = userInvites[i]['userId'];
                     const refUserid = userInvites[i]['refUser']['_id'];
-                    // const name = userInvites[i]['refUser']['name'];
-                    // const phone = userInvites[i]['refUser']['phone'];
-                    // const email = userInvites[i]['refUser']['email'];
                     const invitationCode = userInvites[i]['refUser']['invitationCode'];
                     const refbyUser = userInvites[i]['refUser']['refUser'];
-
                     const stage = userInvites[i]['stage'];
                     const compeleted = userInvites[i]['compeleted'];
                     const redeem = userInvites[i]['redeem'];
-
                     const findRefUser = await User.findById(refUserid);
-
                     userInviteListData.push({
                         "_id" : id,
                         "userId" : userid,
@@ -149,7 +144,39 @@ router.delete("/invite/:id", async(req,res) => {
 })
 
 //invite user list
-router.post("/teamMemers")
+router.post("/teamMembers", async(req,res) => {
+    try {
+        var _userId = req.body.userId
+        const userDetails = await User.findById(_userId);
+        const userInvites = await Invite.find({'userId' : userDetails._id});
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else if(!userInvites) {
+            return res.status(400).json({message: "No Invite Friends..!"});
+        } else {
+            
+            var totalInviteUser = userInvites.length;
+            var userPurchaseList = [];
+            for (let i = 0; i < userInvites.length; i++) {
+                const refUserid = userInvites[i]['refUser']['_id'];
+                const findRefUser = await User.findById(refUserid);
+                const userPurchaseCount = findRefUser.total_purchase;
+                if(userPurchaseCount != 0) {
+                    const purchaseAmt = userPurchaseCount;
+                    userPurchaseList.push({'amount' : purchaseAmt});
+                }
+            }
+            let totalPurchase = userPurchaseList.map(o => o.amount).reduce((a, c) => { return a + c });
+            return res.send({
+                'teamMember': totalInviteUser,
+                'purchaseNumber': userPurchaseList.length,
+                'purchaseAmount': totalPurchase
+            });
+        }
+    } catch (e) {
+        res.status(500).send(e);
+    }
+})
 
 
 module.exports = router;

@@ -64,7 +64,7 @@ router.get("/deposite", async(req,res) => {
     }
 });
 
-//user deposite
+// user deposite
 router.post("/userDeposite", async(req,res) => {
     try {
         var _userId = req.body.userId
@@ -75,6 +75,41 @@ router.post("/userDeposite", async(req,res) => {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             const userDeposite = await Deposite.find({'userId' : userDetails._id});
+            if (!userDeposite) {
+                res.status(400).json({error: "No Deposite..!"});
+            } else {
+                res.status(200).json(userDeposite);
+            }
+        }  
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+});
+
+router.post("/userDepositeCompleted", async(req,res) => {
+    try {
+        var _userId = req.body.userId
+        const _status = req.body.status || 0 // 0 processing, 1 completed
+
+        const userDetails = await User.findById(_userId);
+        
+        if (!userDetails) {
+            return res.status(400).json({message: "Invalid user id..!"});
+        } else {
+            let userDeposite = await Deposite.find({'userId' : userDetails._id});
+            const current_date = new Date();
+            userDeposite = userDeposite.filter((ud => {
+                const date = new Date(ud?.createdAt);
+                date.setDate(date.getDate() + ud?.days || 0);
+                if(_status){
+                    return date <= current_date;
+                }
+                else{
+                    return date > current_date;
+                }
+
+            }))
+
             if (!userDeposite) {
                 res.status(400).json({error: "No Deposite..!"});
             } else {
