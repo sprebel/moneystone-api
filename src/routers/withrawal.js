@@ -156,6 +156,21 @@ router.post("/depositWithrawals", async(req,res) => {
     }
 })
 
+//delete withrawal
+router.delete("/withrawal/:id", async(req,res) => {
+    try {
+        const _id = req.params.id;
+        const deleteWithrawal = await Withrawal.findByIdAndDelete(_id);
+        if (!_id) {
+            res.status(404).send(e);
+        }
+        res.send(deleteWithrawal);
+    } catch (e) {
+        res.status(500).send(e);
+    }
+})
+
+
 
 module.exports = router;
 
