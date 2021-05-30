@@ -47,13 +47,12 @@ router.get("/allInvite", async(req,res) => {
 router.post("/userInvite", async(req,res) => {
     try {
         var _userId = req.body.userId
-        const _compeleted = req.body.compeleted;
         const userDetails = await User.findById(_userId);
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             
-            const userInvites = await Invite.find({'userId' : userDetails._id, compeleted: _compeleted});
+            const userInvites = await Invite.find({'userId' : userDetails._id});
             if (!userInvites) {
                 return res.status(400).json({message: "No Invite Friends..!"});
             } else {
