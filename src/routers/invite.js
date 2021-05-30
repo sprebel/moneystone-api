@@ -107,13 +107,16 @@ router.post("/inviteRedeem", async(req,res) => {
 
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
-        } else if (!userInvites) {
+        } 
+        else if (!userInvites) {
             return res.status(400).json({message: "Invalid invite id..!"});
         } else if (userInvites.compeleted == true) {
             return res.status(400).json({message: "Faild, You already redeem..!"});
-        } else if (refUserDetails.total_purchase == 0) {
+        } 
+        else if (refUserDetails.total_purchase == 0) {
             return res.status(400).json({message: "Faild Redeem, Friend not spend..!"});
-        } else {
+        } 
+        else {
             var addWalletAmount = userDetails.wallet + 100;
             var addInviteIncome = userDetails.invite_income + 100;
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmount, "invite_income" : addInviteIncome}, {new:true});
