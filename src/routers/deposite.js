@@ -89,7 +89,7 @@ router.post("/userDeposite", async(req,res) => {
 router.post("/userDepositeCompleted", async(req,res) => {
     try {
         var _userId = req.body.userId
-        const _status = req.body.status || 0 // 0 processing, 1 completed
+        const _status = req.body.status // 0 processing, 1 completed
 
         const userDetails = await User.findById(_userId);
         
@@ -97,9 +97,15 @@ router.post("/userDepositeCompleted", async(req,res) => {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             const userDeposite = await Deposite.find({'userId' : userDetails._id});
+
             const current_date = new Date();
-            userDeposite = userDeposite.filter((ud => {
+
+            
+            
+            newUserDeposite = userDeposite.filter((ud => {
+                
                 const date = new Date(ud?.createdAt);
+                
                 date.setDate(date.getDate() + ud?.days || 0);
                 if(_status){
                     return date <= current_date;
@@ -110,10 +116,13 @@ router.post("/userDepositeCompleted", async(req,res) => {
 
             }))
 
-            if (!userDeposite) {
+            console.log(newUserDeposite);
+            //return res.status(200).json("Check");
+
+            if (!newUserDeposite) {
                 return res.status(400).json({error: "No Deposite..!"});
             } else {
-                return res.status(200).json(userDeposite);
+                return res.status(200).json(newUserDeposite);
             }
         }  
     } catch (error) {
