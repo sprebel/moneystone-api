@@ -52,7 +52,7 @@ router.post("/userInvite", async(req,res) => {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             
-            const userInvites = await Invite.find({'userId' : userDetails._id});
+            const userInvites = await Invite.find({'userId' : _userId});
             if (!userInvites) {
                 return res.status(400).json({message: "No Invite Friends..!"});
             } else {
@@ -107,24 +107,19 @@ router.post("/inviteRedeem", async(req,res) => {
 
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
-        } 
-        else if (!userInvites) {
+        } else if (!userInvites) {
             return res.status(400).json({message: "Invalid invite id..!"});
         } else if (userInvites.compeleted == true) {
             return res.status(400).json({message: "Faild, You already redeem..!"});
-        } 
-        else if (refUserDetails.total_purchase == 0) {
+        } else if (refUserDetails.total_purchase == 0) {
             return res.status(400).json({message: "Faild Redeem, Friend not spend..!"});
-        } 
-        else {
+        } else {
             var addWalletAmount = userDetails.wallet + 100;
             var addInviteIncome = userDetails.invite_income + 100;
             const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmount, "invite_income" : addInviteIncome}, {new:true});
             const updateInvite = await Invite.findByIdAndUpdate(_inviteId, {"redeem" : 100, "compeleted" : true}, {new:true});
             return res.status(200).json({message: "Invite Friend Redeem Successful."})
-        }
-
-        
+        } 
 
     } catch (error) {
         return res.status(500).json({message: "Internal Server Error"});
