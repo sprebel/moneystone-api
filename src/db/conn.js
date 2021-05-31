@@ -6,10 +6,10 @@ mongoose.connect(
     //"mongodb://127.0.0.1:27017/moneystone",
     mongoURI,
     {
-        useNewUrlParser:true,
-        useCreateIndex:true,
-        useFindAndModify:false,
-        useUnifiedTopology:true,
+        useNewUrlParser: true, 
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
 }).then(() => {
     console.log("Connection is successful...");
 }).catch((e) => {
