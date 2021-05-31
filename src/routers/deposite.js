@@ -96,7 +96,7 @@ router.post("/userDepositeCompleted", async(req,res) => {
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
-            let userDeposite = await Deposite.find({'userId' : userDetails._id});
+            const userDeposite = await Deposite.find({'userId' : userDetails._id});
             const current_date = new Date();
             userDeposite = userDeposite.filter((ud => {
                 const date = new Date(ud?.createdAt);
@@ -111,9 +111,9 @@ router.post("/userDepositeCompleted", async(req,res) => {
             }))
 
             if (!userDeposite) {
-                res.status(400).json({error: "No Deposite..!"});
+                return res.status(400).json({error: "No Deposite..!"});
             } else {
-                res.status(200).json(userDeposite);
+                return res.status(200).json(userDeposite);
             }
         }  
     } catch (error) {
