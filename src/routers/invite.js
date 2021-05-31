@@ -48,14 +48,17 @@ router.post("/userInvite", async(req,res) => {
     try {
         var _userId = req.body.userId
         const userDetails = await User.findById(_userId);
+        
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else {
             
-            const userInvites = await Invite.find({'userId' : _userId});
+            const userInvites = await Invite.find({'userId' : userDetails._id});
             if (!userInvites) {
                 return res.status(400).json({message: "No Invite Friends..!"});
             } else {
+
+                console.log(userInvites);
 
                 const userInviteListData = [];
 
