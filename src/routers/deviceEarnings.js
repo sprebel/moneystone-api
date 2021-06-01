@@ -68,8 +68,9 @@ router.post("/deviceRedeem", async(req,res) => {
         var _currentMonth = req.body.currentMonth;
         var _currentYear = req.body.currentYear;
         
-        const orderDetails = await Order.findById(_orderId);
         const userDetails = await User.findById(_userId);
+        const orderDetails = await Order.findById(_orderId);
+        
         if (!userDetails) {
             return res.status(400).json({message: "Invalid user id..!"});
         } else if (!orderDetails) {
@@ -83,17 +84,20 @@ router.post("/deviceRedeem", async(req,res) => {
             const lastClaimMonth = orderDetails.lastClaimMonth;
 
             var remainingClaim;
+            console.log(`current time ` + _currentTime);
 
             if (lastClaimMonth == _currentMonth) {
+                
                 if (lastClaimDate == _currentDate) {
                     remainingClaim = (_currentTime - lastClaimTime) * hourlyRate;
                 } else {
                     remainingClaim = (((_currentDate - lastClaimDate) * 24) + (_currentTime - lastClaimTime)) * hourlyRate;
                 }
             } else {
-                var days = (31 - _lastClaimDate + 1) * 24
-                var time = _currentTime - _lastClaimTime;
+                var days = (31 - lastClaimDate + 1) * 24
+                var time = _currentTime - lastClaimTime;
                 remainingClaim = (days + time) * hourlyRate;
+                console.log(`current claim time ` + _currentTime);
                 console.log(`days ` + days);
                 console.log(`time ` + time);
                 console.log(`Not Currrent Month ` + remainingClaim);
@@ -106,9 +110,9 @@ router.post("/deviceRedeem", async(req,res) => {
             var addWalletAmt = userDetails.wallet + remainingClaim;
             var addDeviceAmt = userDetails.device_earnings + remainingClaim;
 
-            const updateUser = await User.findByIdAndUpdate(_userId, {"wallet" : addWalletAmt, "device_earnings" : addDeviceAmt}, {new:true});
+            const updateUser = await User.findByIdAndUpdate(userDetails._id, {"wallet" : addWalletAmt, "device_earnings" : addDeviceAmt}, {new:true});
 
-            const updateOrder = await Order.findByIdAndUpdate(_orderId, 
+            const updateOrder = await Order.findByIdAndUpdate(orderDetails._id, 
                 {
                     "lastClaimTime" : _currentTime,
                     "lastClaimDate" : _currentDate,
