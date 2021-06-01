@@ -91,7 +91,12 @@ router.post("/deviceRedeem", async(req,res) => {
                     remainingClaim = (((_currentDate - lastClaimDate) * 24) + (_currentTime - lastClaimTime)) * hourlyRate;
                 }
             } else {
-                remainingClaim = (((30 - lastClaimDate + _currentDate - 1) * 24) + (_currentTime - lastClaimTime)) * hourlyRate;
+                var days = (31 - _lastClaimDate + 1) * 24
+                var time = _currentTime - _lastClaimTime;
+                remainingClaim = (days + time) * hourlyRate;
+                console.log(`days ` + days);
+                console.log(`time ` + time);
+                console.log(`Not Currrent Month ` + remainingClaim);
             }
             
             console.log(remainingClaim);
