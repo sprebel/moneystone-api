@@ -14,7 +14,7 @@ const invite = require("./routers/invite");
 const appVersion = require("./routers/appVersion");
 
 const app = express();
-var serverPort = 8080;
+var serverPort = 80;
 const port = process.env.PORT || serverPort
 
 app.use(express.json());
