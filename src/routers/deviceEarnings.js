@@ -25,7 +25,7 @@ router.post("/deviceEarnigs", async(req,res) => {
             const _lastClaimMonth = orderDetails.lastClaimMonth;
 
             var remainingClaim;
-            if (_currentMonth == _lastClaimMonth) {
+            if (_lastClaimMonth == _currentMonth) {
                 if (_lastClaimDate == _currentDate) {
                     remainingClaim = (_currentTime - _lastClaimTime) * hourlyRate;
                     console.log(`Today` + remainingClaim);
@@ -35,9 +35,13 @@ router.post("/deviceEarnigs", async(req,res) => {
                     console.log(`Not Today` + remainingClaim);
                 }
             } else {
-                remainingClaim = (((30 - _lastClaimDate + _lastClaimDate - 1) * 24) + (currentHour - _lastClaimDate)) * hourlyRate;
-                console.log(`Not Currrent Month` + remainingClaim);
-            }
+                var days = (31 - _lastClaimDate + 1) * 24
+                var time = _currentTime - _lastClaimTime;
+                remainingClaim = (days + time) * hourlyRate;
+                console.log(`days ` + days);
+                console.log(`time ` + time);
+                console.log(`Not Currrent Month ` + remainingClaim);
+            } 
 
             
             console.log(remainingClaim);     
