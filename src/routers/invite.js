@@ -166,12 +166,13 @@ router.post("/teamMembers", async(req,res) => {
                     userPurchaseList.push({'amount' : purchaseAmt});
                 }
             }
-            let totalPurchase = userPurchaseList.map(o => o.amount).reduce((a, c) => { return a + c });
+            var totalPurchase = userPurchaseList.map(o => o.amount).reduce((a, c) => { return a + c });
             return res.send({
                 'teamMember': totalInviteUser,
                 'purchaseNumber': userPurchaseList.length,
                 'purchaseAmount': totalPurchase
             });
+            //res.status(200).send(userInvites);
         }
     } catch (e) {
         res.status(500).send(e);
