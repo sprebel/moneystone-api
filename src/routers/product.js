@@ -13,9 +13,9 @@ const domain = require("../config/domain")
 router.get("/product", async(req,res) => {
   try {
       const productData = await Product.find();
-      res.send(productData);
+      return res.send(productData);
   } catch (e) {
-      res.status(500).send(e);
+      return res.status(500).send(e);
   }
 });
 
@@ -27,10 +27,10 @@ router.get("/product/:id", async(req,res) => {
       if (!productDetails) {
           return res.status(404).send();
       } else {
-          res.send(productDetails);
+          return res.send(productDetails);
       }
   } catch (e) {
-      res.status(500).send(e);
+      return res.status(500).send(e);
   }
 })
 
@@ -124,7 +124,7 @@ router.post("/product", upload.single('image'), async(req,res) => {
     });
 
   } catch (e) {
-    res.status(500).send(e);
+    return res.status(500).send(e);
   }
 });
 
@@ -148,7 +148,7 @@ router.get("/product/img", async (req,res) => {
       }
     });
 
-    res.status(200).json({success: true, files});
+    return res.status(200).json({success: true, files});
 
   });
 });
@@ -163,7 +163,7 @@ router.get('/product/img/:filename', async (req, res) => {
       });
     }
     
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       file: files[0],
     });
@@ -185,7 +185,7 @@ router.get('/product/img/d/:filename', async (req, res, next) => {
     if (file[0].contentType === 'images/jpeg' || file[0].contentType === 'images/png') {
       gfs.openDownloadStreamByName(req.params.filename).pipe(res);
     } else {
-      res.status(404).json({
+      return res.status(404).json({
         err: 'Not an image',
       })
     }
@@ -206,7 +206,7 @@ router.route('/product/img/download/:filename')
                     // render image to browser
                     gfs.openDownloadStreamByName(req.params.filename).pipe(res);
                 } else {
-                    res.status(404).json({
+                    return res.status(404).json({
                         err: 'Not an image',
                     });
                 }
@@ -222,7 +222,7 @@ router.route('/product/img/:id')
               return res.status(404).json({ err: err });
           }
 
-          res.status(200).json({
+          return res.status(200).json({
               success: true,
               message: `File with ID ${req.params.id} is deleted`,
           });
@@ -235,11 +235,11 @@ router.delete("/product/:id", async(req,res) => {
       const _id = req.params.id;
       const deleteProduct = await Product.findByIdAndDelete(_id);
       if (!_id) {
-          res.status(404).send(e);
+        return res.status(404).send(e);
       }
-      res.send(deleteProduct);
+      return res.send(deleteProduct);
   } catch (e) {
-      res.status(500).send(e);
+      return res.status(500).send(e);
   }
 })
 
@@ -248,9 +248,9 @@ router.patch("/product/:id", async(req,res) => {
   try {
     const _id = req.params.id;
     const updateProduct = await Product.findByIdAndUpdate(_id, req.body, {new:true});
-    res.send(updateProduct);
+    return res.send(updateProduct);
   } catch (e) {
-    res.status(500).send(e);  
+    return res.status(500).send(e);  
   }
 })
 

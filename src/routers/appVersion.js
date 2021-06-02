@@ -6,9 +6,9 @@ const AppVersion = require("../models/appVersion");
 router.get("/appVersion", async(req,res) => {
     try {
         const versionData = await AppVersion.find();
-        res.send(versionData);
+        return res.send(versionData);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -17,9 +17,9 @@ router.get("/latestVersion", async(req,res) => {
     try {
         const versionData = await AppVersion.find().sort({$natural: - 1}).limit(1);
         const latestVersion = versionData[0];
-        res.status(200).send(latestVersion);
+        return res.status(200).send(latestVersion);
     } catch (e) {
-        res.status(500).json({message: e});
+        return res.status(500).json({message: e});
     }
 })
 
@@ -29,9 +29,9 @@ router.post("/appVersion", async(req,res) => {
     try {
         const appVersion = new AppVersion(req.body);
         const createAppVersion = await appVersion.save();
-        res.status(200).send(createAppVersion);
+        return res.status(200).send(createAppVersion);
     } catch (e) {
-        res.status(500).json({message: e});
+        return res.status(500).json({message: e});
     }
 });
 

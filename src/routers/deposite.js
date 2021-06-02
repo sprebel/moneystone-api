@@ -45,12 +45,12 @@ router.post("/addDeposite", async(req,res) => {
             })
 
             const addDeposite = await deposite.save();
-            res.status(200).json({message : "Deposit Successfully.", depositeDetails: addDeposite});
+            return res.status(200).json({message : "Deposit Successfully.", depositeDetails: addDeposite});
             
         }
 
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     } 
 });
 
@@ -58,9 +58,9 @@ router.post("/addDeposite", async(req,res) => {
 router.get("/deposite", async(req,res) => {
     try {
         const depositeData = await Deposite.find();
-        res.send(depositeData);
+        return res.send(depositeData);
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -76,9 +76,9 @@ router.post("/userDeposite", async(req,res) => {
         } else {
             const userDeposite = await Deposite.find({'userId' : userDetails._id});
             if (!userDeposite) {
-                res.status(400).json({error: "No Deposite..!"});
+                return res.status(400).json({error: "No Deposite..!"});
             } else {
-                res.status(200).json(userDeposite);
+                return res.status(200).json(userDeposite);
             }
         }  
     } catch (error) {
@@ -126,7 +126,7 @@ router.post("/userDepositeCompleted", async(req,res) => {
             }
         }  
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -138,11 +138,11 @@ router.delete("/deposite/:id", async(req,res) => {
         const _id = req.params.id;
         const deleteDeposite = await Deposite.findByIdAndDelete(_id);
         if (!_id) {
-            res.status(404).send(e);
+            return res.status(404).send(e);
         }
-        res.send(deleteDeposite);
+        return res.send(deleteDeposite);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -151,9 +151,9 @@ router.delete("/deposite/:id", async(req,res) => {
 router.get("/depositeEarnings", async(req,res) => {
     try {
         const depositeEarningsData = await DepositeEarnings.find();
-        res.send(depositeEarningsData);
+        return res.send(depositeEarningsData);
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 

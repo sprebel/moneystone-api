@@ -7,9 +7,9 @@ const User = require("../models/user");
 router.get("/allInvite", async(req,res) => {
     try {
         const inviteData = await Invite.find();
-        res.send(inviteData);
+        return res.send(inviteData);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 

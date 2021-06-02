@@ -12,10 +12,10 @@ router.get("/profile/:id", async(req,res) => {
         if (!userDetails) {
             return res.status(400).json({error: "Invalid userid"});
         } else {
-            res.send(userDetails);
+            return res.send(userDetails);
         }
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -24,9 +24,9 @@ router.patch("/profile/:id", async(req,res) => {
     try {
         const _id = req.params.id;
         const updateUser = await User.findByIdAndUpdate(_id, req.body, {new:true});
-        res.send(updateUser);
+        return res.send(updateUser);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -53,15 +53,15 @@ router.post("/bankDetails", async(req,res) => {
                     userId: userDetails._id
                 });
                 const createBankDetails = await bank.save();
-                res.status(200).send(createBankDetails);
+                return res.status(200).send(createBankDetails);
             } else {
-                res.status(400).json({message: "Bank Details Alread add."});
+                return res.status(400).json({message: "Bank Details Alread add."});
             }
             
         }
         
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 })
 
@@ -76,13 +76,13 @@ router.post("/userBankDetails", async(req,res) => {
         } else {
             const bankDetails = await Bank.findOne({'userId': _userId});
             if (!bankDetails) {
-                res.status(200).json({bankDetailsAdd: false});
+                return res.status(200).json({bankDetailsAdd: false});
             } else {
-                res.status(200).json({bankDetailsAdd: true, bankDetails: bankDetails})
+                return res.status(200).json({bankDetailsAdd: true, bankDetails: bankDetails})
             }
         }
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error", error: e});
+        return res.status(500).json({message: "Internal Server Error", error: e});
     }
 })
 
@@ -109,12 +109,12 @@ router.post("/updateBankDetails", async(req,res) => {
                 userId: userDetails._id
             };
             const updateBankDetails = await Bank.findByIdAndUpdate(bankDetailsId, bank, {new:true});
-            res.status(200).send(updateBankDetails);
+            return res.status(200).send(updateBankDetails);
             
         }
         
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 })
 
@@ -124,10 +124,10 @@ router.post("/invitesUser", async(req,res) => {
     try {
         var _invitationCode = req.body.invitationCode
         const userDetails = await User.find({"refUser" : _invitationCode});
-        res.send(userDetails);
+        return res.send(userDetails);
 
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 })
 
@@ -139,10 +139,10 @@ router.post("/claimInviteStage", async(req,res) => {
         var _invitationCode = req.body.invitationCode
         var _inviteStage = req.body.inviteStage
         const userDetails = await User.find({"refUser" : _invitationCode, "invite_stage": _inviteStage});
-        res.send(userDetails);
+        return res.send(userDetails);
         
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 })
 

@@ -63,9 +63,9 @@ router.post("/withrawal", async(req,res) => {
 router.get("/withrawal", async(req,res) => {
     try {
         const withrawalData = await Withrawal.find().sort({$natural: - 1});
-        res.send(withrawalData);
+        return res.send(withrawalData);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 });
 
@@ -79,15 +79,15 @@ router.post("/userWithrawal", async(req,res) => {
         } else {
             const userWithrawal = await Withrawal.find({'userId' : _userId}).sort({$natural: - 1});
             if (!userWithrawal) {
-                res.status(400).json({error: "No Withrawal..!"});
+                return res.status(400).json({error: "No Withrawal..!"});
             } else {
-                res.status(200).send(userWithrawal);
+                return res.status(200).send(userWithrawal);
             }
         }
-        const withrawalData = await Withrawal.find();
-        res.send(withrawalData);
+        // const withrawalData = await Withrawal.find();
+        // res.send(withrawalData);
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 
@@ -113,9 +113,9 @@ router.patch("/withrawal/:id", async(req,res) => {
         }
 
         const updateWithrawal = await Withrawal.findByIdAndUpdate(_id, {"status" : _status}, {new:true});   
-        res.send(updateWithrawal);
+        return res.send(updateWithrawal);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -156,7 +156,7 @@ router.post("/depositWithrawals", async(req,res) => {
         }
 
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 })
 
@@ -166,11 +166,11 @@ router.delete("/withrawal/:id", async(req,res) => {
         const _id = req.params.id;
         const deleteWithrawal = await Withrawal.findByIdAndDelete(_id);
         if (!_id) {
-            res.status(404).send(e);
+            return res.status(404).send(e);
         }
-        res.send(deleteWithrawal);
+        return res.send(deleteWithrawal);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 

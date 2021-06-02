@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
 const VerifyOTP = require("../models/verifyOTP");
-var nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 const Invite = require("../models/invite");
 
 var smtpTransport = nodemailer.createTransport({
@@ -25,17 +25,17 @@ router.post("/auth/login", async(req,res) => {
     try {
             const loginDetails = await User.findOne({'phone' : phone});
             if (!loginDetails) {
-                res.status(400).json({message: "User not found..!"});
+                return res.status(400).json({message: "User not found..!"});
             } else {
                 if (password != loginDetails.password) {
-                    res.status(400).json({message: "Incorrect Password..!"});
+                    return res.status(400).json({message: "Incorrect Password..!"});
                 } else {
-                    res.json({message : "Login Successfully", user_data : loginDetails});
+                    return res.json({message : "Login Successfully", user_data : loginDetails});
                 }
             }
             
         } catch (e) {
-            res.status(500).json({message: "Internal Server Error"});
+            return res.status(500).json({message: "Internal Server Error"});
         }
 })
 
@@ -64,7 +64,7 @@ router.post("/auth/register", async(req,res) => {
             var otp = otpDetails[0]['otp'] ?? '00000000';
 
             if (_validOTP != otp) {
-                res.json({message : "Faild, OTP doesn't match"});
+                return res.json({message : "Faild, OTP doesn't match"});
             } 
             else {
                 const userRefrence = await User.findOne({"invitationCode" : _ref});            
@@ -142,7 +142,7 @@ router.post("/auth/register", async(req,res) => {
         }
 
     } catch (e) {
-        res.status(500).json({message: e});
+        return res.status(500).json({message: e});
     }
 });
 
@@ -165,10 +165,10 @@ router.post("/auth/singupOtp", async(req,res) => {
         });
         const sendOTP = await verifyOTP.save();
 
-        res.json({message : "OTP send..!", otpDetails: sendOTP});
+        return res.json({message : "OTP send..!", otpDetails: sendOTP});
 
     } catch (e) {
-        res.status(500).json({error : e});
+        return res.status(500).json({error : e});
     }
 })
 
@@ -200,7 +200,7 @@ router.post("/auth/verifyotp", async(req,res) => {
         }
 
     } catch (e) {
-        res.status(500).json({error:e});
+        return res.status(500).json({error:e});
     }
 })
 
@@ -214,9 +214,9 @@ router.post("/auth/changepass", async(req,res) => {
     try {
         const userDetails = await User.findOne({'email' : _email});
         if (!userDetails) {
-            res.status(400).json({error: "User not found..!"});
+            return res.status(400).json({error: "User not found..!"});
         } else if(_password == null || _password == "") {
-            res.status(400).json({error: "Password can't black..!"});
+            return res.status(400).json({error: "Password can't black..!"});
         } else {
             //const otpDetails = await VerifyOTP.findOne({'email': email});
             const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
@@ -224,13 +224,13 @@ router.post("/auth/changepass", async(req,res) => {
 
             if (_validOTP == otp) {
                 const updatePass = await User.findOneAndUpdate({'email' : _email}, {"password" : _password}, {new:true});
-                res.status(200).json({message : "New password set successfully", user_data : updatePass});
+                return res.status(200).json({message : "New password set successfully", user_data : updatePass});
             } else {
-                res.status(400).json({message : "Faild, OTP doesn't match"});
+                return res.status(400).json({message : "Faild, OTP doesn't match"});
             }
         }
     } catch (e) {
-        res.status(500).json({error : e});
+        return res.status(500).json({error : e});
     }
 });
 

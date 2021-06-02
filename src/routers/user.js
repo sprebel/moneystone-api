@@ -8,9 +8,9 @@ router.post("/user", async(req,res) => {
     try {
         const user = new User(req.body);
         const createUser = await user.save();
-        res.status(200).send(createUser);
+        return res.status(200).send(createUser);
     } catch (e) {
-        res.status(500).json({message: "Error, Mobile number already registed"});
+        return res.status(500).json({message: "Error, Mobile number already registed"});
     }
 });
 
@@ -18,9 +18,9 @@ router.post("/user", async(req,res) => {
 router.get("/user", async(req,res) => {
     try {
         const userData = await User.find().sort({$natural: - 1});
-        res.send(userData);
+        return res.send(userData);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -32,10 +32,10 @@ router.get("/user/:id", async(req,res) => {
         if (!userDetails) {
             return res.status(404).send();
         } else {
-            res.send(userDetails);
+            return res.send(userDetails);
         }
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -44,9 +44,9 @@ router.patch("/user/:id", async(req,res) => {
     try {
         const _id = req.params.id;
         const updateUser = await User.findByIdAndUpdate(_id, req.body, {new:true});
-        res.send(updateUser);
+        return res.send(updateUser);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 
@@ -56,11 +56,11 @@ router.delete("/user/:id", async(req,res) => {
         const _id = req.params.id;
         const deleteUser = await User.findByIdAndDelete(_id);
         if (!_id) {
-            res.status(404).send(e);
+            return res.status(404).send(e);
         }
-        res.send(deleteUser);
+        return res.send(deleteUser);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 })
 

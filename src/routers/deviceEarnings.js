@@ -50,10 +50,10 @@ router.post("/deviceEarnigs", async(req,res) => {
                 RemainingClaim: remainingClaim,
                 orderDetails: orderDetails
             });
-            res.send(deviceEarnigs);
+            return res.send(deviceEarnigs);
         }
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 

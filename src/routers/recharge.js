@@ -27,10 +27,10 @@ router.post("/recharge", async(req,res) => {
             })
 
             const createRecharge = await rechargeDetails.save();
-            res.status(200).json({message : "Recharge Succefully.", userDetails: createRecharge});
+            return res.status(200).json({message : "Recharge Succefully.", userDetails: createRecharge});
         }
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 

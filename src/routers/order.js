@@ -43,10 +43,10 @@ router.post("/order", async(req,res) => {
                 totalClaimAmt: 0,
             });
             const createOrder = await order.save();
-            res.status(200).send(createOrder);
+            return res.status(200).send(createOrder);
         }
     } catch (e) {
-        res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 });
 
