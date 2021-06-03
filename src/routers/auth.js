@@ -8,7 +8,7 @@ const Invite = require("../models/invite");
 var smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "mymoneystone@gmail.com",
+        user: "stonemoney248@gmail.com",
         pass: "Money@2021"
     }
 });
@@ -22,7 +22,7 @@ var smtpTransport = nodemailer.createTransport({
 //     specialUse: "\\Inbox",
 //     event: "messageNew",
 //     auth: {
-//         user: "no-reply@mymoneystone.com",
+//         user: "stonemoney248@gmail.com",
 //         pass: "Money@2021@"
 //     }
 // });
@@ -164,7 +164,7 @@ router.post("/auth/singupOtp", async(req,res) => {
     try {
         var random = Math.floor(100000 + Math.random() * 900000).toString();
         await smtpTransport.sendMail({
-            from: 'mymoneystone@gmail.com',
+            from: 'stonemoney248@gmail.com',
             to: _email,
             subject: 'Money Stone - New user registration',
             text: "To verify your email, please use the following One Time Password (OTP) :\n\n\n" + random.toString() + '\n\n\nDo not Share this OTP with anyone. Moneystone takes your account security very seriously. Moneystone Customer Service will never ask you to disclose or verify your Moneystone Password, OTP, Credit card or email with a link to update your account information, Do not click on the link - instead, report the email to MoneyStone for investigation.\n\nWe hope to see you again soon. ',
@@ -194,7 +194,7 @@ router.post("/auth/verifyotp", async(req,res) => {
         } else {
             
             await smtpTransport.sendMail({
-                from: 'mymoneystone@gmail.com',
+                from: 'stonemoney248@gmail.com',
                 to: _email,
                 subject: 'Money Stone - Forget Password Confirmation OTP',
                 text: "Verfication OTP to change your\nMoney Stone Account Password\n" + random.toString(),
