@@ -182,7 +182,8 @@ router.post("/auth/singupOtp", async(req,res) => {
         });
         const sendOTP = await verifyOTP.save();
 
-        return res.json({message : "Your OTP is 456789", otpDetails: sendOTP});
+        //return res.json({message : "OTP send Successfully", otpDetails: sendOTP});
+        return res.status(400).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
 
     } catch (e) {
         return res.status(500).json({error : e});
