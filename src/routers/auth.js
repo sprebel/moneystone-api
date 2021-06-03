@@ -182,8 +182,8 @@ router.post("/auth/singupOtp", async(req,res) => {
         });
         const sendOTP = await verifyOTP.save();
 
-        //return res.json({message : "OTP send Successfully", otpDetails: sendOTP});
-        return res.status(400).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
+        return res.json({message : "OTP send Successfully", otpDetails: sendOTP});
+        //return res.status(400).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
 
     } catch (e) {
         return res.status(500).json({error : e});
@@ -214,8 +214,8 @@ router.post("/auth/verifyotp", async(req,res) => {
             //     email: userDetails.email,
             // });
             // const sendOTP = await verifyOTP.save();
-            // return res.status(200).send(sendOTP);
-            return res.status(200).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
+            return res.status(200).send(sendOTP);
+            //return res.status(200).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
         }
 
     } catch (e) {
