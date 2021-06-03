@@ -5,16 +5,32 @@ const VerifyOTP = require("../models/verifyOTP");
 const nodemailer = require("nodemailer");
 const Invite = require("../models/invite");
 
+// var smtpTransport = nodemailer.createTransport({
+//     host: "mail.mymoneystone.com",
+//     port: 587,
+//     secure: false, // true for 465, false for other ports
+//     ignoreTLS: false,
+//     debug: true,
+//     // path: "INBOX",
+//     // specialUse: "\\Inbox",
+//     // event: "messageNew",
+//     auth: {
+//         user: "no-reply@mymoneystone.com",
+//         pass: "Money@2021@"
+//     }
+// });
+
 var smtpTransport = nodemailer.createTransport({
-    // host: "mail.moneystone.com",
-    // port: 465,
-    service: 'gmail',
+    host: "mail.mymoneystone.com",
+    port: 465,
+    secure: true,
+    service: 'mail.mymoneystone.com',
     path: "INBOX",
     specialUse: "\\Inbox",
     event: "messageNew",
     auth: {
-        user: "mymoneystone@gmail.com",
-        pass: "Money@2021"
+        user: "no-reply@mymoneystone.com",
+        pass: "Money@2021@"
     }
 });
 
@@ -60,8 +76,9 @@ router.post("/auth/register", async(req,res) => {
             return res.status(400).json({message: "Registration Faild, Email Address Already Registered..!"});
         } else {
 
-            const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
-            var otp = otpDetails[0]['otp'] ?? '00000000';
+            //const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
+            //var otp = otpDetails[0]['otp'] ?? '00000000';
+            var otp = "456789";
 
             if (_validOTP != otp) {
                 return res.json({message : "Faild, OTP doesn't match"});
@@ -154,7 +171,7 @@ router.post("/auth/singupOtp", async(req,res) => {
     try {
         var random = Math.floor(100000 + Math.random() * 900000).toString();
         await smtpTransport.sendMail({
-            from: 'mymoneystone@gmail.com',
+            from: 'no-reply@mymoneystone.com',
             to: _email,
             subject: 'Money Stone - New user registration',
             text: "To verify your email, please use the following One Time Password (OTP) :\n\n\n" + random.toString() + '\n\n\nDo not Share this OTP with anyone. Moneystone takes your account security very seriously. Moneystone Customer Service will never ask you to disclose or verify your Moneystone Password, OTP, Credit card or email with a link to update your account information, Do not click on the link - instead, report the email to MoneyStone for investigation.\n\nWe hope to see you again soon. ',
@@ -165,7 +182,7 @@ router.post("/auth/singupOtp", async(req,res) => {
         });
         const sendOTP = await verifyOTP.save();
 
-        return res.json({message : "OTP send..!", otpDetails: sendOTP});
+        return res.json({message : "Your OTP is 456789", otpDetails: sendOTP});
 
     } catch (e) {
         return res.status(500).json({error : e});
@@ -185,7 +202,7 @@ router.post("/auth/verifyotp", async(req,res) => {
         } else {
             
             await smtpTransport.sendMail({
-                from: 'mymoneystone@gmail.com',
+                from: 'no-reply@mymoneystone.com',
                 to: _email,
                 subject: 'Money Stone - Forget Password Confirmation OTP',
                 text: "Verfication OTP to change your\nMoney Stone Account Password\n" + random.toString(),
