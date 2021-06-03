@@ -76,9 +76,9 @@ router.post("/auth/register", async(req,res) => {
             return res.status(400).json({message: "Registration Faild, Email Address Already Registered..!"});
         } else {
 
-            //const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
-            //var otp = otpDetails[0]['otp'] ?? '00000000';
-            var otp = "456789";
+            const otpDetails = await VerifyOTP.find({'email': _email}).sort({$natural: - 1}).limit(1);
+            var otp = otpDetails[0]['otp'] ?? '00000000';
+            //var otp = "456789";
 
             if (_validOTP != otp) {
                 return res.json({message : "Faild, OTP doesn't match"});
@@ -207,13 +207,14 @@ router.post("/auth/verifyotp", async(req,res) => {
                 subject: 'Money Stone - Forget Password Confirmation OTP',
                 text: "Verfication OTP to change your\nMoney Stone Account Password\n" + random.toString(),
             });
-            const verifyOTP = new VerifyOTP({
-                otp: random.toString(),
-                userId: userDetails._id,
-                email: userDetails.email,
-            });
-            const sendOTP = await verifyOTP.save();
-            return res.status(200).send(sendOTP);
+            // const verifyOTP = new VerifyOTP({
+            //     otp: random.toString(),
+            //     userId: userDetails._id,
+            //     email: userDetails.email,
+            // });
+            // const sendOTP = await verifyOTP.save();
+            // return res.status(200).send(sendOTP);
+            return res.status(200).send({"message": "Temporally new user registration close, Please singup tomorrow, Thank you :)"});
         }
 
     } catch (e) {
